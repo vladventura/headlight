@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.colors.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="~/css/layout.css">
     <title>@ViewData["Title"] - Headlight</title>
@@ -10,19 +11,21 @@
 <body>
     <div class="main-container">
         <div class="page-title container">
-            <header>@ViewData["PageTitle"]</header>
+            <header class="header">@ViewData["PageTitle"]</header>
         </div>
         <div class="app container">
             <div class="navbar container">
                 <aside>
                     <nav>
                         <ul>
-                            <li><a href="#">Home</a></li>
+                            <li><a asp-page="/Index">Home</a></li>
+                            <li><a asp-page="/Games/Index">Games</a></li>
+                            <li><a asp-page="/Platforms">Platforms</a></li>
                         </ul>
                     </nav>
                 </aside>
             </div>
-            <div class="container">
+            <div class="page container">
                 <main role="main" class="pb-3">
                     @RenderBody()
                 </main>

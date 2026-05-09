@@ -14,10 +14,24 @@ body {
 
 .page-title {
     text-align: center;
+    background-color: var(--pico-color-slate-900);
+    margin: 0;
+    min-width: 100%;
 }
 
 .app {
     flex: 1;
     display: grid;
     grid-template-columns: 25% 75%;
+    margin: 0;
+    min-width: 100%;
+}
+
+.navbar {
+    padding-left: 1rem;
+    background-color: var(--pico-color-slate-850);
+}
+
+.page {
+    padding: 1rem;
 }

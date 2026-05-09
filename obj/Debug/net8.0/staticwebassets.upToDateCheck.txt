@@ -1,3 +1,4 @@
+wwwroot\css\Games\index.css
 wwwroot\css\layout.css
 wwwroot\favicon.ico
 wwwroot\js\site.js

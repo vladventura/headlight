@@ -26,8 +26,28 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/vladv/Laboratory/Headlight/Pages/Games/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2FtZXNcQWRkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/vladv/Laboratory/Headlight/Pages/Games/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2FtZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/vladv/Laboratory/Headlight/Pages/Games/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2FtZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/vladv/Laboratory/Headlight/Pages/Games/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2FtZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/vladv/Laboratory/Headlight/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/vladv/Laboratory/Headlight/Pages/Platforms.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGxhdGZvcm1zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/vladv/Laboratory/Headlight/Pages/Privacy.cshtml]

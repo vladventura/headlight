@@ -1,0 +1,16 @@
+﻿.games-page-topbar {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+    border-bottom: calc(var(--pico-border-width) * 2) solid var(--pico-table-border-color);
+}
+
+.games-add-game-container {
+    text-align: center;
+}
+
+.games-game-list {
+}
+
+.games-game-list-item {
+}
