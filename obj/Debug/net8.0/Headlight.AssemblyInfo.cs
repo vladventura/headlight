@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Headlight")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef29a04465bf109c70b3a9a0f174be53f53df2fc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4cab23895661af0625847c6b5728b41c7f682cf3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Headlight")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Headlight")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

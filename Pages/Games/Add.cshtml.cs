@@ -44,6 +44,11 @@ namespace Headlight.Pages.Games
             return Page();
         }
 
+        public IActionResult OnPostCancelChanges()
+        {
+            return RedirectToPage("/Games/Index");
+        }
+
         private void SetPageMessage(string message, CssClass css)
         {
             PageMessage = message;

@@ -1,0 +1,43 @@
+﻿@page "/Games/{gameId:int}"
+@model Headlight.Pages.Games.ViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+@if (Model.SelectedGame != null)
+{
+    <div class="container">
+        <p>@Model.SelectedGame?.Name</p>
+    </div>
+    <div class="container">
+        <label>Status</label>
+        <p>@Model.SelectedGame?.Status?.Name</p>
+    </div>
+    <div class="container">
+        <label for="Platform">Platform</label>
+        <p>@Model.SelectedGame?.Platform?.Name</p>
+    </div>
+    @if (Model.SelectedGame?.FinishedDateTime != null)
+    {
+        <div class="container">
+            <label>Finished Date</label>
+            <p>@Model.SelectedGame?.FinishedDateTime?.ToLocalTime()</p>
+        </div>
+    }
+
+    <form method="post">
+        <button asp-page-handler="EditGame">Edit</button>
+        <button asp-page-handler="Cancel">Cancel</button>
+    </form>
+} else
+{
+    <div class="container">
+        <span>No game found with id @Model.GameId</span>
+    </div>
+
+    <div>
+        <a asp-page="/Games/Index">Go back</a>
+    </div>
+}
+
+

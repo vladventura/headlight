@@ -25,16 +25,23 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Status</th>
                     <th>Platform</th>
                 </tr>
             </thead>
             <tbody>
                     @foreach (Game game in Model.AllGames)
                     {
-                        <tr>
-                            <td>@game.Name</td>
-                            <td>@game.Platform?.Name</td>
-                        </tr>
+                    string hrefTarget = Url.Page("/Games/View", new { GameId = game.Id}) ?? "";
+                    <tr>
+                        <td>
+                            <div onclick="location.href = '@hrefTarget'" style="cursor: pointer;">
+                                @game.Name
+                            </div>
+                        </td>
+                        <td>@game.Status?.Name</td>
+                        <td>@game.Platform?.Name</td>
+                    </tr>
                     }
             </tbody>
         }
