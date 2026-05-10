@@ -11,6 +11,7 @@ namespace Headlight.Models
         public Status Status { get; set; } = null;
         public Platform Platform { get; set; } = null;
         public string Name { get; set; } = string.Empty;
+        public DateTime? AddedDateTime { get; set; }
         public DateTime? FinishedDateTime { get; set; }
     }
 }

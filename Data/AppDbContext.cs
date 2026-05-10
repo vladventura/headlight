@@ -9,6 +9,7 @@ namespace Headlight.Data
 
         public DbSet<Game> Games { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Platform> Platforms { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

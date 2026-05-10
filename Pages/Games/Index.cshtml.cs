@@ -13,5 +13,10 @@ namespace Headlight.Pages.Games
         {
             AllGames = [.. context.Games.Include(o => o.Platform).Include(o => o.Status)];
         }
+
+        public IActionResult OnPostAddGame()
+        {
+            return RedirectToPage("/Games/Add");
+        }
     }
 }
