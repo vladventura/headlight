@@ -18,8 +18,18 @@
                 <aside>
                     <nav>
                         <ul>
-                            <li><a asp-page="/Index">Home</a></li>
-                            <li><a asp-page="/Games/Index">Games</a></li>
+                            <li>
+                                        <a asp-page="/Index">Home</a>
+                            </li>
+                            <li>
+                                <details style="margin: 0;">
+                                    <summary>Games</summary>
+                                    <p><a asp-page="/Games/Index">All </a></p>
+                                    <p><a asp-page="/Games/Index" asp-route-statusidfilter="1">Backlog</a></p>
+                                    <p><a asp-page="/Games/Index" asp-route-statusidfilter="2">Playing</a></p>
+                                    <p><a asp-page="/Games/Index" asp-route-statusidfilter="3">Finished</a></p>
+                                </details>
+                            </li>
                             <li><a asp-page="/Platforms/Index">Platforms</a></li>
                         </ul>
                     </nav>
