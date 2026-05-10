@@ -32,6 +32,7 @@
                     @foreach (Platform platform in Model.AllPlatforms)
                     {
                     string hrefTarget = Url.Page("/Platforms/View", new { PlatformId = platform.Id }) ?? "";
+                    string countTarget = Url.Page("/Games/Index", new { PlatformIdFilter = platform.Id }) ?? "";
                     string deleteTarget = Url.Page("/Platforms/Delete", new { PlatformId = platform.Id }) ?? "";
                     <tr>
                         <td>
@@ -39,7 +40,11 @@
                                 @platform.Name
                             </div>
                         </td>
-                        <td>@platform.Games?.Count</td>
+                        <td>
+                            <div onclick="location.href = '@countTarget'" style="cursor: pointer;">
+                                @platform.Games?.Count
+                            </div>
+                        </td>
                         <td>
                             @if (platform.Id > 1)
                             {
