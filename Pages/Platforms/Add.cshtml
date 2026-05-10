@@ -1,0 +1,22 @@
+﻿@page
+@model Headlight.Pages.Platforms.AddModel
+@{
+    ViewData["Title"] = "Platforms";
+    ViewData["PageTitle"] = "Add Platform";
+}
+
+<link rel="stylesheet" href="~/css/Games/add.css">
+
+<form method="post">
+    @if (!string.IsNullOrEmpty(Model.PageMessage))
+    {
+        <small class="@Model.PageMessageCssClass">@Model.PageMessage</small>
+    }
+
+    <div class="container">
+        <label for="Name">Name</label>
+        <input type="text" name="Name" id="Name" />
+    </div>
+    <button asp-page-handler="SaveChanges">Add</button>
+    <button asp-page-handler="CancelChanges">Cancel</button>
+</form>

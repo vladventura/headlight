@@ -1,0 +1,33 @@
+﻿@page "/Platforms/{platformId:int}"
+@model Headlight.Pages.Platforms.ViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+@if (Model.SelectedPlatform != null)
+{
+    <div class="container">
+        <p>@Model.SelectedPlatform?.Name</p>
+    </div>
+
+    <div class="container">
+        <label>Games in Platform</label>
+        <p>@Model.SelectedPlatform?.Games.Count</p>
+    </div>
+
+    <form method="post">
+        <button asp-page-handler="EditPlatform">Edit</button>
+        <button asp-page-handler="Cancel">Cancel</button>
+    </form>
+} else
+{
+    <div class="container">
+        <span>No platform found with id @Model.PlatformId</span>
+    </div>
+
+    <div>
+        <a asp-page="/Platforms/Index">Go back</a>
+    </div>
+}
+
+

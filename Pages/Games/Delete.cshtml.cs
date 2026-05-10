@@ -26,7 +26,7 @@ namespace Headlight.Pages.Games
             return RedirectToPage("/Games/Index");
         }
 
-        public IActionResult CancelChanges()
+        public IActionResult OnPostCancelChanges()
         {
             return RedirectToPage("/Games/Index");
         }

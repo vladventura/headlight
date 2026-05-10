@@ -1,0 +1,33 @@
+﻿@page "/Platforms/{platformId:int}/Edit"
+@model Headlight.Pages.Platforms.EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@if (Model.SelectedPlatform != null)
+{
+    <form method="post">
+        @if (!string.IsNullOrEmpty(Model.PageMessage))
+        {
+            <small class="@Model.PageMessageCssClass">@Model.PageMessage</small>
+        }
+
+        <div class="container">
+            <label for="Name">Name</label>
+            <input type="text" name="Name" id="Name" value="@Model.SelectedPlatform.Name"/>
+        </div>
+
+        <button asp-page-handler="SaveChanges">Save</button>
+        <button asp-page-handler="CancelChanges">Cancel</button>
+    </form>
+}
+else
+{
+    <div class="container">
+        <span>No platform found with id @Model.PlatformId</span>
+    </div>
+
+    <div>
+        <a asp-page="/Platforms/Index">Go back</a>
+    </div>
+}
