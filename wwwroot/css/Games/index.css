@@ -9,3 +9,8 @@
 .games-add-game-container {
     text-align: center;
 }
+
+.games-delete-icon > svg {
+    fill: var(--pico-del-color);
+    stroke: var(--pico-del-color);
+}

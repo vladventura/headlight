@@ -11,7 +11,7 @@ namespace Headlight.Pages.Games
         public List<Game> AllGames { get; set; } = [];
         public void OnGet()
         {
-            AllGames = [.. context.Games.Include(o => o.Platform).Include(o => o.Status)];
+            AllGames = [.. context.Games.Include(o => o.Platform).Include(o => o.Status).OrderBy(g => g.Name)];
         }
 
         public IActionResult OnPostAddGame()
