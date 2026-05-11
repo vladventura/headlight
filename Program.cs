@@ -7,14 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-string host = builder.Configuration["DB_HOST"]?.ToString() ?? "localhost";
-string port = builder.Configuration["DB_PORT"]?.ToString() ?? "5432";
+string host = builder.Configuration["DB_HOST"]?.ToString() ?? "postgres";
+string port = builder.Configuration["DB_PORT"]?.ToString() ?? "";
 string database = "headlight";
 string username = builder.Configuration["DB_USER"]?.ToString() ?? "headlightuser";
 string password = builder.Configuration["DB_PASS"]?.ToString() ?? "headlightpass*";
+string connStr = Utils.GetDbConnectionString(host, port, database, username, password);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(Utils.GetDbConnectionString(host, port, database, username, password),
+    options.UseNpgsql(connStr,
         npgsqlOptions => {
             npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3,
                 maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
