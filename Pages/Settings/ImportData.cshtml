@@ -1,0 +1,24 @@
+﻿@page
+@model Headlight.Pages.Settings.ImportDataModel
+@{
+    ViewData["Title"] = ViewData["PageTitle"] = "Import";
+}
+
+<div class="container">
+    <hgroup>
+        <h1>Upload Data</h1>
+        <p>Adds games in bulk to the database. See docs for the valid JSON schema.</p>
+    </hgroup>
+</div>
+
+<div class="container">
+    @if (!string.IsNullOrEmpty(Model.PageMessage))
+    {
+        <p>@Model.PageMessage</p>
+    }
+    <form method="post" enctype="multipart/form-data">
+        <label for="UploadedFile">Uploaded File</label>
+        <input type="file" asp-for="UploadedFile" accept=".json" />
+        <button type="submit" asp-page-handler="HandleUploadData">Upload</button>
+    </form>
+</div>
