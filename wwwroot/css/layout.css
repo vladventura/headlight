@@ -3,6 +3,12 @@ body {
     min-height: 100vh;
 }
 
+.render-body-container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .main-container {
     /*    display: grid;*/
     /*    grid-template-columns: 100%;

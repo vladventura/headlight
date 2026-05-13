@@ -24,6 +24,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Run migrations
@@ -49,5 +51,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

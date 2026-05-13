@@ -74,6 +74,8 @@ namespace Headlight.Pages.Settings
                     .Select(p => p.Id)
                     .FirstOrDefault();
                 statusId = (statusId <= 0) ? 1 : statusId;
+                DateTime addedDateTime = statusId == 3 ? DateTime.Now.AddMonths(-1) : DateTime.Now;
+                addedDateTime = addedDateTime.ToUniversalTime();
                 DateTime? finishedDateTime = statusId == 3 ? DateTime.Now.ToUniversalTime() : null;
                 Game? foundGame = context.Games
                     .Where(g => g.Name ==  incomingGame.Name && g.PlatformId == platformId)
@@ -88,6 +90,7 @@ namespace Headlight.Pages.Settings
                     StatusId = statusId,
                     PlatformId = platformId,
                     FinishedDateTime = finishedDateTime,
+                    AddedDateTime = addedDateTime
                 };
                 context.Games.Add(newGame);
             }
