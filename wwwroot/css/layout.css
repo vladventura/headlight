@@ -41,3 +41,14 @@ body {
 .page {
     padding: 1rem;
 }
+
+.main-footer {
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: 50% auto;
+    padding: 0 1rem 0.5rem 1rem;
+}
+
+.main-footer > span:last-child {
+    justify-self: end;
+}

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IConfiguration _config
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -40,6 +42,12 @@
                 <main role="main" class="render-body-container">
                     @RenderBody()
                 </main>
+            </div>
+        </div>
+        <div>
+            <div class="main-footer">
+                <span><a href="https://github.com/vladventura">@@vladventura</a></span>
+                <span>v@_config["AppVersion"]</span>
             </div>
         </div>
     </div>
