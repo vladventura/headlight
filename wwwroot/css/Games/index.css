@@ -11,6 +11,14 @@
 }
 
 .games-delete-icon > svg {
-    fill: var(--pico-del-color);
     stroke: var(--pico-del-color);
+}
+
+.games-game-list {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.games-game-list-table {
+
 }
