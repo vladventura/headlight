@@ -13,7 +13,9 @@
 <body>
     <div class="main-container">
         <div class="page-title container">
-            <header class="header">@ViewData["PageTitle"]</header>
+            <header class="header">
+                <h1>@ViewData["PageTitle"]</h1>
+            </header>
         </div>
         <div class="app container">
             <div class="navbar container">
@@ -44,12 +46,10 @@
                 </main>
             </div>
         </div>
-        <div>
             <div class="main-footer">
                 <span><a href="https://github.com/vladventura">@@vladventura</a></span>
                 <span>v@_config["AppVersion"]</span>
             </div>
-        </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </body>

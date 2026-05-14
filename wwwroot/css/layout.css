@@ -10,11 +10,9 @@ body {
 }
 
 .main-container {
-    /*    display: grid;*/
-    /*    grid-template-columns: 100%;
-    grid-template-rows: 30% 70%;*/
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 5% 90% 5%;
     min-height: 100vh;
 }
 
