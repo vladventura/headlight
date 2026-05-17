@@ -19,7 +19,7 @@
 </div>
 <hr />
 <div class="games-game-list">
-    <table class="games-game-list-table">
+    <table id="games-table" class="games-game-list-table">
         @if (Model.AllGames.Count > 0)
         {
             <thead>
@@ -34,7 +34,7 @@
                 {
                 string hrefTarget = Url.Page("/Games/View", new { GameId = game.Id}) ?? "";
                 string deleteTarget = Url.Page("/Games/Delete", new { GameId = game.Id }) ?? "";
-                <tr>
+                <tr id="@game.Id">
                     <td>
                         <div onclick="location.href = '@hrefTarget'" style="cursor: pointer;">
                             @game.Name
@@ -60,4 +60,5 @@
     </table>
 </div>
 
-
+<script src="~/js/libs/fdb-all.min.js" type="text/javascript"></script>
+<script src="~/js/Games/index.js"></script>
