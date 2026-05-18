@@ -17,11 +17,20 @@
         <label for="Platform">Platform</label>
         <p>@Model.SelectedGame?.Platform?.Name</p>
     </div>
+
+    @if (Model.SelectedGame?.AddedDateTime != null)
+    {
+        <div class="container">
+            <label>Added Date</label>
+            <p>@Model.SelectedGame?.AddedDateTime?.ToLocalTime().ToString("MM/dd/yyyy")</p>
+        </div>
+    }
+
     @if (Model.SelectedGame?.FinishedDateTime != null)
     {
         <div class="container">
             <label>Finished Date</label>
-            <p>@Model.SelectedGame?.FinishedDateTime?.ToLocalTime()</p>
+            <p>@Model.SelectedGame?.FinishedDateTime?.ToLocalTime().ToString("MM/dd/yyyy")</p>
         </div>
     }
 
