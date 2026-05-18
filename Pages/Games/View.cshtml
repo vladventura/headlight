@@ -30,7 +30,7 @@
     {
         <div class="container">
             <label>Finished Date</label>
-            <p>@Model.SelectedGame?.FinishedDateTime?.ToLocalTime()</p>
+            <p>@Model.SelectedGame?.FinishedDateTime?.ToLocalTime().ToString("MM/dd/yyyy")</p>
         </div>
     }
 
