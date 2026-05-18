@@ -19,7 +19,7 @@
 </div>
 <hr />
 <div class="games-game-list">
-    <table class="games-game-list">
+    <table id="platforms-table" class="games-game-list" data-rowcount="@Model.AllPlatforms.Count">
         @if (Model.AllPlatforms.Count > 0)
         {
             <thead>
@@ -34,7 +34,7 @@
                     string hrefTarget = Url.Page("/Platforms/View", new { PlatformId = platform.Id }) ?? "";
                     string countTarget = Url.Page("/Games/Index", new { PlatformIdFilter = platform.Id }) ?? "";
                     string deleteTarget = Url.Page("/Platforms/Delete", new { PlatformId = platform.Id }) ?? "";
-                    <tr>
+                    <tr id="@platform.Id">
                         <td>
                             <div onclick="location.href = '@hrefTarget'" style="cursor: pointer;">
                                 @platform.Name
@@ -66,4 +66,5 @@
     </table>
 </div>
 
-
+<script src="~/js/libs/typeahead.js"></script>
+<script src="~/js/Platforms/index.js"></script>

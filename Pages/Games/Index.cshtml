@@ -19,7 +19,7 @@
 </div>
 <hr />
 <div class="games-game-list">
-    <table id="games-table" class="games-game-list-table">
+    <table id="games-table" class="games-game-list-table" data-rowcount="@Model.AllGames.Count">
         @if (Model.AllGames.Count > 0)
         {
             <thead>
@@ -60,5 +60,5 @@
     </table>
 </div>
 
-<script src="~/js/libs/fdb-all.min.js" type="text/javascript"></script>
+<script src="~/js/libs/typeahead.js"></script>
 <script src="~/js/Games/index.js"></script>
