@@ -22,31 +22,38 @@ namespace Headlight.Pages.Games
 
         public void OnGet()
         {
-            Platforms = [.. context.Platforms];
-            Statuses = [.. context.Statuses];
+            SetupPage();
         }
 
         public IActionResult OnPostSaveChanges(Game game)
         {
-            DateTime addedDateTime = DateTime.Now.ToUniversalTime();
+            DateTime addedDateTime = DateTime.Now;
             // If the game is finished, set a Finished Date of now
             if (game.StatusId == 3)
             {
                 game.FinishedDateTime = addedDateTime;
             }
 
-            game.AddedDateTime = addedDateTime;
+            game.AddedDateTime ??= addedDateTime;
+            game.AddedDateTime = game.AddedDateTime?.Date.ToUniversalTime();
 
             context.Games.Add(game);
             context.SaveChanges();
             string pageMessage = string.Format("{0} has been added!", game.Name);
             SetPageMessage(pageMessage, CssClass.Success);
+            SetupPage();
             return Page();
         }
 
         public IActionResult OnPostCancelChanges()
         {
             return RedirectToPage("/Games/Index");
+        }
+
+        private void SetupPage()
+        {
+            Platforms = [.. context.Platforms];
+            Statuses = [.. context.Statuses];
         }
 
         private void SetPageMessage(string message, CssClass css)

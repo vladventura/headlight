@@ -38,9 +38,10 @@ namespace Headlight.Pages.Games
             {
                 SelectedGame.PlatformId = game.PlatformId;
                 SelectedGame.StatusId = game.StatusId;
+                SelectedGame.AddedDateTime = game.AddedDateTime?.ToUniversalTime().Date;
                 if (SelectedGame.StatusId == 3)
                 {
-                    SelectedGame.FinishedDateTime = DateTime.Now.ToUniversalTime();
+                    SelectedGame.FinishedDateTime = DateTime.Now.ToUniversalTime().Date;
                 }
                 else
                 {

@@ -18,6 +18,10 @@
         <input type="text" name="Name" id="Name" />
     </div>
     <div class="container">
+        <label for="AddedDateTime">Added Date</label>
+        <input type="date" name="AddedDateTime" id="AddedDateTime" value="@DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd")"/>
+    </div>
+    <div class="container">
         <label for="StatusId">Status</label>
         <select name="StatusId" aria-label="Status Id" required>
             @foreach (var status in Model.Statuses)

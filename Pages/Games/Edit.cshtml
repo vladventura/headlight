@@ -6,6 +6,8 @@
 
 @if (Model.SelectedGame != null)
 {
+    DateTime addedValue = new(Model.SelectedGame.AddedDateTime?.Ticks ?? DateTime.Now.Ticks, DateTimeKind.Unspecified);
+
     <form method="post">
         @if (!string.IsNullOrEmpty(Model.PageMessage))
         {
@@ -15,6 +17,10 @@
         <div class="container">
             <label for="Name">Name</label>
             <input type="text" name="Name" id="Name" value="@Model.SelectedGame.Name"/>
+        </div>
+        <div class="container">
+            <label for="AddedDateTime">Added Date</label>
+            <input type="date" name="AddedDateTime" id="AddedDateTime" value="@addedValue.ToLocalTime().ToString("yyyy-MM-dd")" />
         </div>
         <div class="container">
             <label for="StatusId">Status</label>
