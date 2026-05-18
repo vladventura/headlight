@@ -27,3 +27,6 @@ jobs:
           context: .
           push: true
           tags: vladventura/headlight:latest
+          secrets: |
+            "username=vladventura"
+            "password=${{ secrets.DOCKERHUB_TOKEN }}"
