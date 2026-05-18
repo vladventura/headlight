@@ -13,6 +13,7 @@ jobs:
 
       - name: Login, Build, push
         run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}"
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u vladventura
           docker build -t vladventura/headlight:latest .
           docker push vladventura/headlight:latest
