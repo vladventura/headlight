@@ -1,13 +1,15 @@
+using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Headlight.Pages.Games
 {
-    public class IndexModel(AppDbContext context) : PageModel
+    public class IndexModel(AppDbContext context) : PageTempData
     {
+        public string PageMessageCssClass { get; set; } = "";
         [FromQuery(Name = "PlatformIdFilter")]
         public int PlatformIdFilter { get; set; }
         [FromQuery(Name = "StatusIdFilter")]
@@ -34,6 +36,18 @@ namespace Headlight.Pages.Games
             }
 
             AllGames = [.. query];
+            if (MessageResult != null)
+            {
+                switch ((PageMessageResult)MessageResult)
+                {
+                    case PageMessageResult.Success:
+                        Message ??= "Deleted successfully";
+                        PageMessageCssClass = "page-message-success";
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         public IActionResult OnPostAddGame()

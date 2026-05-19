@@ -1,3 +1,4 @@
+using Headlight.AppCode.Globals;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,8 @@ namespace Headlight.Pages.Games
             {
                 context.Games.Remove(SelectedGame);
                 context.SaveChanges();
+                TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
+                TempData[TempDataVars.Message] = string.Format("{0} has been deleted successfully.", SelectedGame.Name);
             }
             return RedirectToPage("/Games/Index");
         }
