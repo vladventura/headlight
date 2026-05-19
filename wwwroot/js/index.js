@@ -7,11 +7,13 @@ const onSelectChange = () => {
 }
 
 const setRandomGame = () => {
-    const { name, platform, status, id } = downloadedData["randomGame"];
-    document.getElementById("randomgame-name-link").innerText = name;
-    document.getElementById("randomgame-name-link").href = '/Games/' + id;
-    const description = `Enjoyed best on ${platform} - ${status}`;
-    document.getElementById("randomgame-description").innerText = description;
+    if (downloadedData["randomGame"]) {
+        const { name, platform, status, id } = downloadedData["randomGame"];
+        document.getElementById("randomgame-name-link").innerText = name;
+        document.getElementById("randomgame-name-link").href = '/Games/' + id;
+        const description = `Enjoyed best on ${platform} - ${status}`;
+        document.getElementById("randomgame-description").innerText = description;
+    }
 }
 
 const refreshFinishedBanner = () => {

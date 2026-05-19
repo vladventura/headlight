@@ -17,6 +17,12 @@
         </form>
     </div>
 </div>
+
+@if (Model.MessageResult != null)
+{
+    <small class="@Model.PageMessageCssClass">@Model.Message</small>
+}
+
 <hr />
 <div class="games-game-list">
     <table id="games-table" class="games-game-list-table" data-rowcount="@Model.AllGames.Count">
