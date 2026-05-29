@@ -1,0 +1,33 @@
+﻿@page "/Statuses/{statusId:int}"
+@model Headlight.Pages.Statuses.ViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+@if (Model.SelectedStatus != null)
+{
+    <div class="container">
+        <p>@Model.SelectedStatus?.Name</p>
+    </div>
+
+    <div class="container">
+        <label>Games with Status</label>
+        <p>@Model.SelectedStatus?.Games.Count</p>
+    </div>
+
+    <form method="post">
+        <button asp-page-handler="EditStatus">Edit</button>
+        <button asp-page-handler="Cancel">Cancel</button>
+    </form>
+} else
+{
+    <div class="container">
+        <span>No status found with id @Model.StatusId</span>
+    </div>
+
+    <div>
+        <a asp-page="/Statuses/Index">Go back</a>
+    </div>
+}
+
+

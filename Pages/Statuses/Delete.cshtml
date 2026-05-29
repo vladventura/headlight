@@ -1,0 +1,28 @@
+﻿@page "/Statuses/{statusId:int}/Delete"
+@model Headlight.Pages.Statuses.DeleteModel
+@{
+    ViewData["Title"] = "Delete";
+}
+
+@if (Model.SelectedStatus != null)
+{
+    <hgroup>
+        <h1>Deleting @Model.SelectedStatus?.Name</h1>
+        <p>Are you sure you want to delete this status?</p>
+    </hgroup>
+    <hr />
+    <form method="post">
+        <div class="container">
+            <button asp-page-handler="ConfirmDelete">Delete</button>
+            <button asp-page-handler="CancelChanges">Cancel</button>
+        </div>
+    </form>
+}
+else
+{
+    <hgroup>
+        <h1>Not found</h1>
+        <p>Status with ID @Model.SelectedStatus not found.</p>
+    </hgroup>
+
+}
