@@ -8,7 +8,7 @@ function ready(fn) {
 }
 
 const main = () => {
-    const typeAhead = new TypeAhead("games", "searchInput", "games-table");
+    const typeAhead = new TypeAhead("tableitems", "searchInput", "searchable-table");
     typeAhead.loadTypeAhead();
 };
 

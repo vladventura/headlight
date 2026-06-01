@@ -1,0 +1,3 @@
+﻿.table-delete-icon > svg {
+    stroke: var(--pico-del-color);
+}

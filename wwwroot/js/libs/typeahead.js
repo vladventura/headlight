@@ -12,6 +12,8 @@ class TypeAhead {
         collection = db
             .collection(dbName + "-collection")
             .deferredCalls(false);
+        collection.remove({});
+        collection.save();
     }
 
     _onSearchBarInput(event) {
@@ -59,6 +61,7 @@ class TypeAhead {
             this.searchBarElement
                 .addEventListener("input", this._onSearchBarInput);
         }
+        console.log(collection, itemsForCollection);
     }
 }
 
