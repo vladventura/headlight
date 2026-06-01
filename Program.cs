@@ -1,5 +1,6 @@
 using Headlight.AppCode;
 using Headlight.Data;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,11 @@ string database = "headlight";
 string username = builder.Configuration["DB_USER"]?.ToString() ?? "headlightuser";
 string password = builder.Configuration["DB_PASS"]?.ToString() ?? "headlightpass*";
 string connStr = Utils.GetDbConnectionString(host, port, database, username, password);
+
+builder.Services.Configure<RazorViewEngineOptions>(options => {
+    options.PageViewLocationFormats.Add("/Components/{0}" + RazorViewEngine.ViewExtension);
+    options.PageViewLocationFormats.Add("/Icons/{0}" + RazorViewEngine.ViewExtension);
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connStr,
