@@ -50,3 +50,11 @@ body {
 .main-footer > span:last-child {
     justify-self: end;
 }
+
+.page-message-success {
+    color: var(--pico-ins-color);
+}
+
+.page-message-error {
+    color: var(--pico-del-color);
+}
