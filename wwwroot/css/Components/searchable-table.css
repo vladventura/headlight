@@ -1,16 +1,3 @@
-﻿.table-page-topbar {
-
-}
-
-.table-add-item-container {
-    text-align: center;
-}
-
-.table-delete-icon > svg {
+﻿.table-delete-icon > svg {
     stroke: var(--pico-del-color);
-}
-
-.table-items-list {
-    height: 60vh;
-    overflow-y: auto;
 }
