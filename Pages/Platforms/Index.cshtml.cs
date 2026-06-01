@@ -34,7 +34,7 @@ namespace Headlight.Pages.Platforms
                 row.HtmlAttributes = string.Format("id=\"{0}\"", platform.Id);
                 
                 var nameCell = row.AddCell(nameCol.Index, platform.Name);
-                string nameHref = Url.Page("/Platforms/View", new { GameId = platform.Id }) ?? "";
+                string nameHref = Url.Page("/Platforms/View", new { PlatformId = platform.Id }) ?? "";
                 nameCell.Clickable = true;
                 nameCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", nameHref);
                 
@@ -44,7 +44,7 @@ namespace Headlight.Pages.Platforms
                 countCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", countHref);
 
                 var deleteCell = row.AddCell(-1, "");
-                string deleteHref = Url.Page("/PLatforms/Delete", new { GameId = platform.Id }) ?? "";
+                string deleteHref = Url.Page("/Platforms/Delete", new { PlatformId = platform.Id }) ?? "";
                 deleteCell.Clickable = true;
                 deleteCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", deleteHref);
                 deleteCell.Icon = SvgIcon.Delete;
