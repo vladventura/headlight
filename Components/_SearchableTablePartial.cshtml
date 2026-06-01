@@ -12,6 +12,9 @@
 <link rel="stylesheet" href="~/css/Components/searchable-table.css">
 
 <table id="@htmlId" class="@htmlClass" data-rowcount="@dataRowCount">
+    @if (Model.Rows.Count > 0)
+    {
+        
     <thead>
         <tr>
             @foreach(SearchableTableColumn column in Model.Columns.OrderBy(c => c.Index))
@@ -62,6 +65,13 @@
             </tr>
         }
     </tbody>
+    }
+    else
+    {
+        <tbody>
+            <tr><td>No rows to show.</td></tr>
+        </tbody>
+    }
 </table>
 
 <script src="~/js/libs/fdb-all.min.js" type="text/javascript"></script>
