@@ -15,10 +15,10 @@
         
     <thead>
         <tr>
-            @foreach(SearchableTableColumn column in Model.Columns.OrderBy(c => c.Index))
+            @foreach((SearchableTableColumn column, int index) in Model.Columns.OrderBy(c => c.Index).Select((c, i) => (c, i)))
             {
                 string columnHtmlAttrs = column.HtmlAttributes ?? "";
-                <th @Html.Raw(columnHtmlAttrs)>
+                <th @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1? "2" : false)">
                     @column.Key
                 </th>
             }

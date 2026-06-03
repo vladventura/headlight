@@ -1,3 +1,8 @@
-﻿.table-delete-icon > svg {
+﻿#searchable-table > thead {
+    position: sticky;
+    top: 0px;
+}
+
+.table-delete-icon > svg {
     stroke: var(--pico-del-color);
 }
