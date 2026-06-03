@@ -4,6 +4,7 @@ using Headlight.Data;
 using Headlight.Models;
 using Headlight.Models.Components;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,6 +43,7 @@ namespace Headlight.Pages.Games
         public List<PlatformFilterOptions> PlatformFilters { get; set; } = [];
         public List<StatusFilterOptions> StatusFilters { get; set; } = [];
         private List<Game> AllGames { get; set; } = [];
+        private int GamesPage = 1;
         public void OnGet()
         {
             LoadAllGames();
@@ -84,6 +86,18 @@ namespace Headlight.Pages.Games
                 ];
             }
             return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter });
+        }
+
+        public PartialViewResult OnGetRows(int incomingPage)
+        {
+            GamesPage = incomingPage;
+            LoadAllGames();
+            FillSearchableTableData();
+            return new()
+            {
+                ViewName = "_SearchableTableRowsPartial",
+                ViewData = new ViewDataDictionary<SearchableTableData>(ViewData, SearchableTableData),
+            };
         }
 
         private void AssemblePlatformFilters()
@@ -155,11 +169,12 @@ namespace Headlight.Pages.Games
                 );
             }
 
-            AllGames = [.. query];
+            AllGames = [.. query.Skip((GamesPage - 1) * 50).Take(50)];
         }
 
         private void FillSearchableTableData()
         {
+            this.SearchableTableData.Paginate = true;
             var nameCol = SearchableTableData.AddColumn("Name");
             var statusCol = SearchableTableData.AddColumn("Status");
             var platformCol = SearchableTableData.AddColumn("Platform");
