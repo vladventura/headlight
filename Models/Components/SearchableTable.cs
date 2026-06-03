@@ -9,6 +9,7 @@ namespace Headlight.Models.Components
         public List<SearchableTableColumn> Columns { get; set; } = [];
         public List<SearchableTableRow> Rows { get; set; } = [];
         public string? HtmlAttributes { get; set; }
+        public bool Paginate { get; set; } = false;
 
         public SearchableTableColumn AddColumn(string name, string? htmlAttr = null)
         {
