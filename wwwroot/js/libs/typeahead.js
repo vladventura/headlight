@@ -61,7 +61,6 @@ class TypeAhead {
             this.searchBarElement
                 .addEventListener("input", this._onSearchBarInput);
         }
-        console.log(collection, itemsForCollection);
     }
 }
 
