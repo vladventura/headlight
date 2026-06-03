@@ -12,6 +12,8 @@ class TypeAhead {
         collection = db
             .collection(dbName + "-collection")
             .deferredCalls(false);
+        collection.remove({});
+        collection.save();
     }
 
     _onSearchBarInput(event) {

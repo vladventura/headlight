@@ -2,6 +2,11 @@
 
 namespace Headlight.AppCode.Globals
 {
+    public enum SvgIcon
+    {
+        Delete
+    }
+
     public enum PageMessageResult
     {
         Success,

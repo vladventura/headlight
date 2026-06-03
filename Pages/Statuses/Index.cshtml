@@ -1,16 +1,16 @@
 ﻿@page
-@model Headlight.Pages.Platforms.IndexModel
+@model Headlight.Pages.Statuses.IndexModel
 @{
-    ViewData["Title"] = ViewData["PageTitle"] = "Platforms";
+    ViewData["Title"] = ViewData["PageTitle"] = "Statuses";
 }
 
 <div class="table-page-topbar">
     <div class="container">
-        <input type="search" name="searchInput" id="searchInput" placeholder="Find platform..." />
+        <input type="search" name="searchInput" id="searchInput" placeholder="Find status..." />
     </div>
     <div class="table-page-add-container container">
         <form method="post">
-            <button type="submit" asp-page-handler="AddPlatform">Add Platform</button>
+            <button type="submit" asp-page-handler="AddStatus">Add Status</button>
         </form>
     </div>
 </div>

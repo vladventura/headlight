@@ -1,17 +1,72 @@
 ﻿@page
-@using Headlight.Models
 @model Headlight.Pages.Games.IndexModel
 @{
     ViewData["Title"] = "Games";
+    ViewData["HideNavBar"] = true;
 }
 
-<link rel="stylesheet" href="~/css/Games/index.css">
+@section navbar
+{
+    <form method="post">
+        <div class="container" style="padding-right: 1rem;">
+            <div class="container">
+                <details class="dropdown">
+                    <summary>
+                        Platform filter
+                    </summary>
+                    <ul>
+                        @for (int x = 0; x < Model.PlatformFilters.Count; x++)
+                        {
+                            var filterOption = Model.PlatformFilters[x];
+                            <li>
+                                <label>
+                                    <input type="hidden" name="[@x].PlatformId" value="@filterOption.PlatformId" />
+                                    <input type="checkbox"
+                                           id="[@x].PlatformIsChecked"
+                                           name="[@x].PlatformIsChecked"
+                                           value="true"
+                                           checked="@(filterOption.PlatformIsChecked == "true" ? true : false)" />
+                                    @filterOption.PlatformName
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                </details>
+            </div>
+            <div class="container">
+                <details class="dropdown">
+                    <summary>
+                        Status filter
+                    </summary>
+                    <ul>
+                        @for (int x = 0; x < Model.StatusFilters.Count; x++)
+                        {
+                            var filterOption = Model.StatusFilters[x];
+                            <li>
+                                <label>
+                                    <input type="hidden" name="[@x].StatusId" value="@filterOption.StatusId" />
+                                    <input type="checkbox"
+                                           id="[@x].StatusIsChecked"
+                                           name="[@x].StatusIsChecked"
+                                           value="true"
+                                           checked="@(filterOption.StatusIsChecked == "true" ? true : false)" />
+                                    @filterOption.StatusName
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                </details>
+            </div>
+        </div>
+        <button asp-page-handler="Filters">Apply Filters</button>
+    </form>
+}
 
-<div class="games-page-topbar">
-    <div class="games-searchbar-container container">
+<div class="table-page-topbar">
+    <div class="container">
         <input type="search" name="searchInput" id="searchInput" placeholder="Find game..." />
     </div>
-    <div class="games-add-game-container container">
+    <div class="table-page-add-container container">
         <form method="post">
             <button type="submit" asp-page-handler="AddGame">Add Game</button>
         </form>
@@ -24,47 +79,7 @@
 }
 
 <hr />
-<div class="games-game-list">
-    <table id="games-table" class="games-game-list-table" data-rowcount="@Model.AllGames.Count">
-        @if (Model.AllGames.Count > 0)
-        {
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Platform</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Game game in Model.AllGames)
-                {
-                string hrefTarget = Url.Page("/Games/View", new { GameId = game.Id}) ?? "";
-                string deleteTarget = Url.Page("/Games/Delete", new { GameId = game.Id }) ?? "";
-                <tr id="@game.Id">
-                    <td>
-                        <div onclick="location.href = '@hrefTarget'" style="cursor: pointer;">
-                            @game.Name
-                        </div>
-                    </td>
-                    <td>@game.Status?.Name</td>
-                    <td>@game.Platform?.Name</td>
-                    <td>
-                        <div class="games-delete-icon container" onclick="location.href='@deleteTarget'" style="cursor: pointer;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        }
-        else
-        {
-            <tbody>
-                <tr><td>No rows to show.</td></tr>
-            </tbody>
-        }
-    </table>
-</div>
 
-<script src="~/js/libs/typeahead.js"></script>
-<script src="~/js/Games/index.js"></script>
+<div class="table-page-list">
+    <partial name="_SearchableTablePartial" model="@Model.SearchableTableData" />
+</div>
