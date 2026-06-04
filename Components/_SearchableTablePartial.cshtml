@@ -7,7 +7,7 @@
     string htmlClass = SearchableTableData.HtmlClass;
     int dataRowCount = Model.Rows.Count;
 }
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="~/css/Components/searchable-table.css">
 <table id="@htmlId" class="@htmlClass" data-rowcount="@dataRowCount">
     @if (Model.Rows.Count > 0)
@@ -18,9 +18,28 @@
             @foreach((SearchableTableColumn column, int index) in Model.Columns.OrderBy(c => c.Index).Select((c, i) => (c, i)))
             {
                 string columnHtmlAttrs = column.HtmlAttributes ?? "";
-                <th @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1? "2" : false)">
-                    @column.Key
-                </th>
+                if (column.IsSortField)
+                {
+                    <th 
+                        @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1 ? "2" : false)"
+                    >
+                        <div class="clickable-header" id="@string.Format("{0}-header", column.Key)">
+                            <div class="container">
+                                @column.Key
+                            </div>
+                            <div id="@string.Format("{0}-header-arrow", column.Key)" class="container">
+                            </div>
+                        </div>
+                    </th>
+                }
+                else
+                {
+                    <th @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1 ? "2" : false)">
+                        @column.Key
+                    </th>
+                }
+
+                
             }
         </tr>
     </thead>
