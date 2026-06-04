@@ -37,6 +37,7 @@ namespace Headlight.Models.Components
         public int Index { get; set; }
         public string Key { get; set; } = "";
         public string? HtmlAttributes { get; set; }
+        public bool IsSortField { get; set; } = false;
     }
 
     public class SearchableTableRow
