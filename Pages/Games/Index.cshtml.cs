@@ -33,6 +33,10 @@ namespace Headlight.Pages.Games
         public List<int> PlatformIdFilter { get; set; } = [];
         [FromQuery(Name = "StatusIdFilter")]
         public List<int> StatusIdFilter { get; set; } = [];
+        [FromQuery(Name = "SortField")]
+        public string SortField { get; set; } = "";
+        [FromQuery(Name = "SortDirection")]
+        public string SortDirection { get; set; } = "";
 
         [ViewData]
         public string PageTitle { get; set; } = "Games";
@@ -129,9 +133,44 @@ namespace Headlight.Pages.Games
             }
         }
 
+        private IQueryable<Game>? NameSortField(IQueryable<Game>? query)
+        {
+            return SortDirection switch
+            {
+                "Desc" => query?.OrderByDescending(g => g.Name),
+                _ => query?.OrderBy(g => g.Name),
+            };
+        }
+
+        private IQueryable<Game>? StatusSortField(IQueryable<Game>? query)
+        {
+            return SortDirection switch
+            {
+                "Desc" => query?.OrderByDescending(g => g.StatusId),
+                _ => query?.OrderBy(g => g.StatusId),
+            };
+        }
+
+        private IQueryable<Game>? PlatformSortField(IQueryable<Game>? query)
+        {
+            return SortDirection switch
+            {
+                "Desc" => query?.OrderByDescending(g => g.PlatformId),
+                _ => query?.OrderBy(g => g.PlatformId),
+            };
+        }
+
         private void LoadAllGames()
         {
-            IQueryable<Game>? query = context.Games.Include(o => o.Platform).Include(o => o.Status).OrderBy(g => g.Name);
+            IQueryable<Game>? query = context.Games.Include(o => o.Platform).Include(o => o.Status);
+            query = SortField switch
+            {
+                "Name" => NameSortField(query),
+                "Status" => StatusSortField(query),
+                "Platform" => PlatformSortField(query),
+                _ => query.OrderBy(g => g.Name),
+            };
+
             IQueryable<Platform>? proposedFilteredPlatform = context.Platforms.Where(p => PlatformIdFilter.Contains(p.Id));
             if (proposedFilteredPlatform.Count() <= 0)
             {
@@ -139,7 +178,7 @@ namespace Headlight.Pages.Games
             }
             if (proposedFilteredPlatform != null)
             {
-                query = query.Where(g => proposedFilteredPlatform
+                query = query?.Where(g => proposedFilteredPlatform
                     .Select(p => p.Id)
                     .ToList()
                     .Contains(g.PlatformId));
@@ -157,7 +196,7 @@ namespace Headlight.Pages.Games
             }
             if (proposedFilteredStatus != null)
             {
-                query = query.Where(g => proposedFilteredStatus
+                query = query?.Where(g => proposedFilteredStatus
                     .Select(s => s.Id)
                     .ToList()
                     .Contains(g.StatusId)
@@ -168,16 +207,19 @@ namespace Headlight.Pages.Games
                     proposedFilteredStatus.First().Name
                 );
             }
-
-            AllGames = [.. query.Skip((GamesPage - 1) * 50).Take(50)];
+            
+            AllGames = query != null ? [.. query!.Skip((GamesPage - 1) * 50).Take(50)] : []; 
         }
 
         private void FillSearchableTableData()
         {
-            this.SearchableTableData.Paginate = true;
+            SearchableTableData.Paginate = true;
             var nameCol = SearchableTableData.AddColumn("Name");
+            nameCol.IsSortField = true;
             var statusCol = SearchableTableData.AddColumn("Status");
+            statusCol.IsSortField = true;
             var platformCol = SearchableTableData.AddColumn("Platform");
+            platformCol.IsSortField = true;
 
             foreach (Game game in AllGames)
             {
