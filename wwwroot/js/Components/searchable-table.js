@@ -51,11 +51,13 @@ const destroyObserver = () => {
 };
 
 const clearData = () => {
+    destroyObserver();
     currentPage = 0;
     const table = document.getElementById("searchable-table");
     const tbody = table.getElementsByTagName("tbody")[0];
     if (tbody) {
         tbody.innerHTML = "";
+        table.scrollTop = 0;
     }
     if (isPaginateable) {
         const tableParent = table.parentElement;
@@ -66,7 +68,6 @@ const clearData = () => {
             newSentinel.innerText = "...";
             tableParent.appendChild(newSentinel);
         }
-        paginationSetup();
     }
 };
 
@@ -101,6 +102,12 @@ const pullData = () => {
 
 const paginationSetup = () => {
     isPaginateable = true;
+    const searchableTable = document.getElementById("searchable-table");
+    const rowCount = Number(searchableTable.dataset.rowcount ?? 0);
+    if (rowCount < 50) {
+        destroyObserver();
+        return;
+    }
     observer = new IntersectionObserver(e => {
         e.forEach(entr => {
             if (entr.isIntersecting) {
@@ -149,14 +156,12 @@ const sortSetup = () => {
                     arrowEl.innerHTML = arrowUpSvg;
                 }
                 clearData();
-                pullData();
+                paginationSetup();
             });
         });
 };
 
 const main = () => {
-    const typeAhead = new TypeAhead("tableitems", "searchInput", "searchable-table");
-    typeAhead.loadTypeAhead();
     if (document.getElementById("sentinel")) {
         paginationSetup();
     }
