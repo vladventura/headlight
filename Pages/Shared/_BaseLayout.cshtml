@@ -1,0 +1,29 @@
+﻿@inject IConfiguration _config
+
+@{
+    bool formWrap = (bool)(ViewData["FormWrap"] ?? false);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.colors.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="~/css/layout.css">
+    <title>@ViewData["Title"] - Headlight</title>
+</head>
+<body>
+    @if (formWrap)
+    {
+        <form id="mainForm" method="post">
+            @RenderBody()
+        </form>            
+    }
+    else
+    {
+        @RenderBody()
+    }
+</body>
+</html>
