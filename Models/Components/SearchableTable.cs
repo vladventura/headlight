@@ -6,6 +6,7 @@ namespace Headlight.Models.Components
     {
         public const string HtmlId = "searchable-table";
         public const string HtmlClass = "searchable-table";
+        public string? PageTitle { get; set; }
         public List<SearchableTableColumn> Columns { get; set; } = [];
         public List<SearchableTableRow> Rows { get; set; } = [];
         public string? HtmlAttributes { get; set; }
