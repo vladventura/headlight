@@ -28,7 +28,8 @@ namespace Headlight.Pages.Games
 
     public class IndexModel(AppDbContext context) : PageTempData
     {
-
+        [FromQuery(Name = "SearchInput")]
+        public string SearchInput { get; set; } = "";
         [FromQuery(Name = "PlatformIdFilter")]
         public List<int> PlatformIdFilter { get; set; } = [];
         [FromQuery(Name = "StatusIdFilter")]
@@ -73,8 +74,13 @@ namespace Headlight.Pages.Games
             return RedirectToPage("/Games/Add");
         }
 
-        public IActionResult OnPostFilters(List<StatusFilterOptions>? statusOptions, List<PlatformFilterOptions>? platformOptions)
+        public IActionResult OnPostQuery(string? searchInput, List<StatusFilterOptions>? statusOptions, List<PlatformFilterOptions>? platformOptions)
         {
+            if (searchInput != null)
+            {
+                SearchInput = searchInput;
+            }
+
             if (statusOptions != null)
             {
                 StatusIdFilter = [.. statusOptions
@@ -89,7 +95,7 @@ namespace Headlight.Pages.Games
                     .Select(po => po.PlatformId)
                 ];
             }
-            return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter });
+            return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter, SearchInput });
         }
 
         public PartialViewResult OnGetRows(int incomingPage)
@@ -112,7 +118,7 @@ namespace Headlight.Pages.Games
                 {
                     PlatformName = platform.Name,
                     PlatformId = platform.Id,
-                    PlatformIsChecked = StatusIdFilter.Where(sid => sid == platform.Id).Count() > 0 ? "true" : "false",
+                    PlatformIsChecked = PlatformIdFilter.Where(sid => sid == platform.Id).Any() ? "true" : "false",
                 };
                 PlatformFilters.Add(option);
             }
@@ -163,16 +169,24 @@ namespace Headlight.Pages.Games
         private void LoadAllGames()
         {
             IQueryable<Game>? query = context.Games.Include(o => o.Platform).Include(o => o.Status);
+            
+            if (!string.IsNullOrEmpty(SearchInput))
+            {
+                string toLike = string.Format("%{0}%", SearchInput.ToLower());
+                query = query?.Where(g => EF.Functions.ILike(g.Name, toLike));
+            }
+
             query = SortField switch
             {
                 "Name" => NameSortField(query),
                 "Status" => StatusSortField(query),
                 "Platform" => PlatformSortField(query),
-                _ => query.OrderBy(g => g.Name),
+                _ => query?.OrderBy(g => g.Name),
             };
 
+
             IQueryable<Platform>? proposedFilteredPlatform = context.Platforms.Where(p => PlatformIdFilter.Contains(p.Id));
-            if (proposedFilteredPlatform.Count() <= 0)
+            if (!proposedFilteredPlatform.Any())
             {
                 proposedFilteredPlatform = null;
             }
@@ -190,7 +204,7 @@ namespace Headlight.Pages.Games
             }
 
             IQueryable<Status>? proposedFilteredStatus = context.Statuses.Where(s => StatusIdFilter.Contains(s.Id));
-            if (proposedFilteredStatus.Count() <= 0)
+            if (!proposedFilteredStatus.Any())
             {
                 proposedFilteredStatus = null;
             }
@@ -208,7 +222,7 @@ namespace Headlight.Pages.Games
                 );
             }
             
-            AllGames = query != null ? [.. query!.Skip((GamesPage - 1) * 50).Take(50)] : []; 
+            AllGames = query != null ? [.. query!.Skip((GamesPage - 1) * 50).Take(50)] : [];
         }
 
         private void FillSearchableTableData()
