@@ -2,76 +2,48 @@
 
 @{
     bool hideNavBar = (bool)(ViewData["HideNavBar"] ?? false);
+    string returnText = hideNavBar ? "Go Back" : "Index";
+    Layout = "_BaseLayout";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.colors.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.min.css">
-    <link rel="stylesheet" href="~/css/layout.css">
-    <title>@ViewData["Title"] - Headlight</title>
-</head>
-<body>
-    <div class="main-container">
-        <div class="page-title container">
-            <header class="header">
-                <h2>@ViewData["PageTitle"]</h2>
-            </header>
-        </div>
-        <div class="app container">
-            <div class="navbar container">
-                @if (hideNavBar)
-                {
-                    <aside>
-                        <nav>
-                            <ul>
-                                <li>
-                                    <a asp-page="/Index">Go Back</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </aside>
-                    @await RenderSectionAsync("navbar", required: false)
-                }
-                else
-                {
-                    <aside>
-                        <nav>
-                            <ul>
-                                <li>
-                                    <a asp-page="/Index">Home</a>
-                                </li>
-                                <li>
-                                    <details style="margin: 0;">
-                                        <summary>Games</summary>
-                                        <p><a asp-page="/Games/Index">All </a></p>
-                                        <p><a asp-page="/Games/Index" asp-route-statusidfilter="1">Backlog</a></p>
-                                        <p><a asp-page="/Games/Index" asp-route-statusidfilter="2">Playing</a></p>
-                                        <p><a asp-page="/Games/Index" asp-route-statusidfilter="3">Finished</a></p>
-                                    </details>
-                                </li>
-                                <li><a asp-page="/Platforms/Index">Platforms</a></li>
-                                <li><a asp-page="/Statuses/Index">Statuses</a></li>
-                                <li><a asp-page="/Settings/ImportData">Import Data</a></li>
-                            </ul>
-                        </nav>
-                    </aside>
-                }
-            </div>
-            <div class="page container">
-                <main role="main" class="render-body-container">
-                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-                    @RenderBody()
-                </main>
-            </div>
-        </div>
-            <div class="main-footer">
-                <span><a href="https://github.com/vladventura">@@vladventura</a></span>
-                <span>v@_config["AppVersion"]</span>
-            </div>
+<div class="main-container">
+    <div class="page-title container">
+        <header class="header">
+            <h2>@ViewData["PageTitle"]</h2>
+        </header>
     </div>
-</body>
-</html>
+    <div class="app container">
+        <div class="navbar container">
+            <aside>
+                <nav>
+                    <ul>
+                        <li>
+                            <a asp-page="/Index">@returnText</a>
+                        </li>
+                        @if (!hideNavBar)
+                        {
+                            <li><a asp-page="/Games/Index">Games</a></li>
+                            <li><a asp-page="/Platforms/Index">Platforms</a></li>
+                            <li><a asp-page="/Statuses/Index">Statuses</a></li>
+                            <li><a asp-page="/Settings/ImportData">Import Data</a></li>
+                        }
+                    </ul>
+                </nav>
+            </aside>
+            @if (hideNavBar)
+            {
+                @await RenderSectionAsync("navbar", required: false)
+            }
+        </div>
+        <div class="page container">
+            <main role="main" class="render-body-container">
+                <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <div class="main-footer">
+        <span><a href="https://github.com/vladventura">@@vladventura</a></span>
+        <span>v@_config["AppVersion"]</span>
+    </div>
+</div>

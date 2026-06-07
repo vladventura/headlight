@@ -3,9 +3,9 @@ using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Headlight.Models.Components;
+using Headlight.Strategies.SearchableTable;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Headlight.Pages.Games
@@ -26,31 +26,35 @@ namespace Headlight.Pages.Games
         public string PlatformName { get; set; } = "";
     }
 
-    public class IndexModel(AppDbContext context) : PageTempData
+    public class IndexModel(AppDbContext context) : PageTempData, ISearchablePage
     {
-
-        [FromQuery(Name = "PlatformIdFilter")]
-        public List<int> PlatformIdFilter { get; set; } = [];
-        [FromQuery(Name = "StatusIdFilter")]
-        public List<int> StatusIdFilter { get; set; } = [];
-        [FromQuery(Name = "SortField")]
-        public string SortField { get; set; } = "";
-        [FromQuery(Name = "SortDirection")]
-        public string SortDirection { get; set; } = "";
-
-        [ViewData]
-        public string PageTitle { get; set; } = "Games";
-
-        public string PageMessageCssClass { get; set; } = "";
+        [BindProperty(Name = "SearchInput", SupportsGet = true)]
+            public string SearchInput { get; set; } = "";
+        public ISearchStrategy? Strategy { get; set; }
         public SearchableTableData SearchableTableData { get; set; } = new();
 
-        public List<PlatformFilterOptions> PlatformFilters { get; set; } = [];
-        public List<StatusFilterOptions> StatusFilters { get; set; } = [];
-        private List<Game> AllGames { get; set; } = [];
+        [BindProperty]
+            public List<PlatformFilterOptions> PlatformFilters { get; set; } = [];
+        [BindProperty]
+            public List<StatusFilterOptions> StatusFilters { get; set; } = [];
+        [FromQuery(Name = "PlatformIdFilter")]
+            public List<int> PlatformIdFilter { get; set; } = [];
+        [FromQuery(Name = "StatusIdFilter")]
+            public List<int> StatusIdFilter { get; set; } = [];
+        [FromQuery(Name = "SortField")]
+            public string SortField { get; set; } = "";
+        [FromQuery(Name = "SortDirection")]
+            public string SortDirection { get; set; } = "";
+
+        [ViewData]
+            public string PageTitle { get; set; } = "Games";
+
+        public string PageMessageCssClass { get; set; } = "";
+
+
         private int GamesPage = 1;
         public void OnGet()
         {
-            LoadAllGames();
             if (MessageResult != null)
             {
                 switch ((PageMessageResult)MessageResult)
@@ -73,29 +77,28 @@ namespace Headlight.Pages.Games
             return RedirectToPage("/Games/Add");
         }
 
-        public IActionResult OnPostFilters(List<StatusFilterOptions>? statusOptions, List<PlatformFilterOptions>? platformOptions)
+        public IActionResult OnPostQuery()
         {
-            if (statusOptions != null)
+            if (StatusFilters.Count > 0)
             {
-                StatusIdFilter = [.. statusOptions
+                StatusIdFilter = [.. StatusFilters
                     .Where(so => so.StatusIsChecked == "true")
                     .Select(so => so.StatusId)
                 ];
             }
-            if (platformOptions != null)
+            if (PlatformFilters.Count > 0)
             {
-                PlatformIdFilter = [.. platformOptions
+                PlatformIdFilter = [.. PlatformFilters
                     .Where(po => po.PlatformIsChecked == "true")
                     .Select(po => po.PlatformId)
                 ];
             }
-            return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter });
+            return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter, SearchInput });
         }
 
         public PartialViewResult OnGetRows(int incomingPage)
         {
             GamesPage = incomingPage;
-            LoadAllGames();
             FillSearchableTableData();
             return new()
             {
@@ -112,7 +115,7 @@ namespace Headlight.Pages.Games
                 {
                     PlatformName = platform.Name,
                     PlatformId = platform.Id,
-                    PlatformIsChecked = StatusIdFilter.Where(sid => sid == platform.Id).Count() > 0 ? "true" : "false",
+                    PlatformIsChecked = PlatformIdFilter.Where(sid => sid == platform.Id).Any() ? "true" : "false",
                 };
                 PlatformFilters.Add(option);
             }
@@ -127,116 +130,21 @@ namespace Headlight.Pages.Games
                 {
                     StatusName = status.Name,
                     StatusId = status.Id,
-                    StatusIsChecked = StatusIdFilter.Where(sid => sid == status.Id).Count() > 0 ? "true" : "false",
+                    StatusIsChecked = StatusIdFilter.Where(sid => sid == status.Id).Any()? "true" : "false",
                 };
                 StatusFilters.Add(option);
             }
         }
 
-        private IQueryable<Game>? NameSortField(IQueryable<Game>? query)
-        {
-            return SortDirection switch
-            {
-                "Desc" => query?.OrderByDescending(g => g.Name),
-                _ => query?.OrderBy(g => g.Name),
-            };
-        }
-
-        private IQueryable<Game>? StatusSortField(IQueryable<Game>? query)
-        {
-            return SortDirection switch
-            {
-                "Desc" => query?.OrderByDescending(g => g.StatusId),
-                _ => query?.OrderBy(g => g.StatusId),
-            };
-        }
-
-        private IQueryable<Game>? PlatformSortField(IQueryable<Game>? query)
-        {
-            return SortDirection switch
-            {
-                "Desc" => query?.OrderByDescending(g => g.PlatformId),
-                _ => query?.OrderBy(g => g.PlatformId),
-            };
-        }
-
-        private void LoadAllGames()
-        {
-            IQueryable<Game>? query = context.Games.Include(o => o.Platform).Include(o => o.Status);
-            query = SortField switch
-            {
-                "Name" => NameSortField(query),
-                "Status" => StatusSortField(query),
-                "Platform" => PlatformSortField(query),
-                _ => query.OrderBy(g => g.Name),
-            };
-
-            IQueryable<Platform>? proposedFilteredPlatform = context.Platforms.Where(p => PlatformIdFilter.Contains(p.Id));
-            if (proposedFilteredPlatform.Count() <= 0)
-            {
-                proposedFilteredPlatform = null;
-            }
-            if (proposedFilteredPlatform != null)
-            {
-                query = query?.Where(g => proposedFilteredPlatform
-                    .Select(p => p.Id)
-                    .ToList()
-                    .Contains(g.PlatformId));
-                PageTitle = string.Format("{0} - {1}",
-                    proposedFilteredPlatform.Count() > 1 ? string.Format("{0} Platforms", proposedFilteredPlatform.Count()) :
-                    proposedFilteredPlatform.First().Name,
-                    PageTitle
-                );
-            }
-
-            IQueryable<Status>? proposedFilteredStatus = context.Statuses.Where(s => StatusIdFilter.Contains(s.Id));
-            if (proposedFilteredStatus.Count() <= 0)
-            {
-                proposedFilteredStatus = null;
-            }
-            if (proposedFilteredStatus != null)
-            {
-                query = query?.Where(g => proposedFilteredStatus
-                    .Select(s => s.Id)
-                    .ToList()
-                    .Contains(g.StatusId)
-                );
-                PageTitle = string.Format("{0}: {1}", 
-                    PageTitle,
-                    proposedFilteredStatus.Count() > 1 ? string.Format("{0} Statuses", proposedFilteredStatus.Count()) :
-                    proposedFilteredStatus.First().Name
-                );
-            }
-            
-            AllGames = query != null ? [.. query!.Skip((GamesPage - 1) * 50).Take(50)] : []; 
-        }
-
         private void FillSearchableTableData()
         {
-            SearchableTableData.Paginate = true;
-            var nameCol = SearchableTableData.AddColumn("Name");
-            nameCol.IsSortField = true;
-            var statusCol = SearchableTableData.AddColumn("Status");
-            statusCol.IsSortField = true;
-            var platformCol = SearchableTableData.AddColumn("Platform");
-            platformCol.IsSortField = true;
-
-            foreach (Game game in AllGames)
-            {
-                var row = SearchableTableData.AddRow();
-                row.HtmlAttributes = string.Format("id=\"{0}\"", game.Id);
-                var nameCell = row.AddCell(nameCol.Index, game.Name);
-                nameCell.Clickable = true;
-                string nameHref = Url.Page("/Games/View", new { GameId = game.Id }) ?? "";
-                nameCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", nameHref);
-                row.AddCell(statusCol.Index, game.Status.Name);
-                row.AddCell(platformCol.Index, game.Platform.Name);
-                var deleteCell = row.AddCell(-1, "");
-                string deleteHref = Url.Page("/Games/Delete", new { GameId = game.Id }) ?? "";
-                deleteCell.Clickable = true;
-                deleteCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", deleteHref);
-                deleteCell.Icon = SvgIcon.Delete;
-            }
+            Strategy = new GameSearchStrategy(
+                Url, context, SearchInput,
+                SortField, SortDirection, GamesPage,
+                PageTitle, StatusIdFilter, PlatformIdFilter
+            );
+            SearchableTableData = Strategy.GetTableData();
+            PageTitle = SearchableTableData.PageTitle ?? PageTitle;
         }
     }
 }

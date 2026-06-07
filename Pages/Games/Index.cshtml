@@ -3,68 +3,70 @@
 @{
     ViewData["Title"] = "Games";
     ViewData["HideNavBar"] = true;
+    ViewData["FormWrap"] = true;
 }
 
 @section navbar
 {
-    <form method="post">
-        <div class="container" style="padding-right: 1rem;">
-            <div class="container">
-                <details class="dropdown">
-                    <summary>
-                        Platform filter
-                    </summary>
-                    <ul>
-                        @for (int x = 0; x < Model.PlatformFilters.Count; x++)
-                        {
-                            var filterOption = Model.PlatformFilters[x];
-                            <li>
-                                <label>
-                                    <input type="hidden" name="[@x].PlatformId" value="@filterOption.PlatformId" />
-                                    <input type="checkbox"
-                                           id="[@x].PlatformIsChecked"
-                                           name="[@x].PlatformIsChecked"
-                                           value="true"
-                                           checked="@(filterOption.PlatformIsChecked == "true" ? true : false)" />
-                                    @filterOption.PlatformName
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </details>
-            </div>
-            <div class="container">
-                <details class="dropdown">
-                    <summary>
-                        Status filter
-                    </summary>
-                    <ul>
-                        @for (int x = 0; x < Model.StatusFilters.Count; x++)
-                        {
-                            var filterOption = Model.StatusFilters[x];
-                            <li>
-                                <label>
-                                    <input type="hidden" name="[@x].StatusId" value="@filterOption.StatusId" />
-                                    <input type="checkbox"
-                                           id="[@x].StatusIsChecked"
-                                           name="[@x].StatusIsChecked"
-                                           value="true"
-                                           checked="@(filterOption.StatusIsChecked == "true" ? true : false)" />
-                                    @filterOption.StatusName
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </details>
-            </div>
+    <div class="container" style="padding-right: 1rem;">
+        <div class="container">
+            <details class="dropdown">
+                <summary>
+                    Platform filter
+                </summary>
+                <ul>
+                    @for (int x = 0; x < Model.PlatformFilters.Count; x++)
+                    {
+                        var filterOption = Model.PlatformFilters[x];
+                        <li>
+                            <label>
+                                <input type="hidden" name="PlatformFilters[@x].PlatformId" value="@filterOption.PlatformId" />
+                                <input type="checkbox"
+                                        id="PlatformFilters[@x].PlatformIsChecked"
+                                        name="PlatformFilters[@x].PlatformIsChecked"
+                                        value="true"
+                                        checked="@(filterOption.PlatformIsChecked == "true" ? true : false)" />
+                                @filterOption.PlatformName
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </details>
         </div>
-        <button asp-page-handler="Filters">Apply Filters</button>
-    </form>
+        <div class="container">
+            <details class="dropdown">
+                <summary>
+                    Status filter
+                </summary>
+                <ul>
+                    @for (int x = 0; x < Model.StatusFilters.Count; x++)
+                    {
+                        var filterOption = Model.StatusFilters[x];
+                        <li>
+                            <label>
+                                <input type="hidden" name="StatusFilters[@x].StatusId" value="@filterOption.StatusId" />
+                                <input type="checkbox"
+                                        id="StatusFilters[@x].StatusIsChecked"
+                                        name="StatusFilters[@x].StatusIsChecked"
+                                        value="true"
+                                        checked="@(filterOption.StatusIsChecked == "true" ? true : false)" />
+                                @filterOption.StatusName
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </details>
+        </div>
+    </div>
+    <button asp-page-handler="Query">Apply Filters</button>
 }
 
 <div class="table-page-topbar">
     <div class="container">
-        <input type="search" name="searchInput" id="searchInput" placeholder="Find game..." />
+        <fieldset role="search">
+            <input type="search" name="SearchInput" id="SearchInput" placeholder="Find game..." value="@Model.SearchInput" />
+            <input type="submit" value="Search" asp-page-handler="Query" />
+        </fieldset>
     </div>
     <div class="table-page-add-container container">
         <form method="post">

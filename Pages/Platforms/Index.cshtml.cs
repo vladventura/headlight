@@ -1,21 +1,41 @@
-using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
-using Headlight.Models;
 using Headlight.Models.Components;
+using Headlight.Strategies.SearchableTable;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Headlight.Pages.Platforms
 {
-    public class IndexModel(AppDbContext context) : PageModel
+    public class IndexModel(AppDbContext context) : PageModel, ISearchablePage
     {
-        public List<Platform> AllPlatforms { get; set; } = [];
+        [BindProperty(Name = "SearchInput", SupportsGet = true)]
+            public string SearchInput { get; set; } = "";
+        public ISearchStrategy? Strategy { get; set; }
         public SearchableTableData SearchableTableData { get; set; } = new();
+
+        [FromQuery(Name = "SortField")]
+            public string SortField { get; set; } = "";
+        [FromQuery(Name = "SortDirection")]
+            public string SortDirection { get; set; } = "";
+
+        private int PaginationPage { get; set; } = 1;
+
         public void OnGet()
         {
-            AllPlatforms = [.. context.Platforms.Include(o => o.Games).OrderBy(g => g.Name)];
             FillSearchableTableData();
+        }
+
+        public PartialViewResult OnGetRows(int incomingPage)
+        {
+            PaginationPage = incomingPage;
+            FillSearchableTableData();
+            return new()
+            {
+                ViewName = "_SearchableTableRowsPartial",
+                ViewData = new ViewDataDictionary<SearchableTableData>(ViewData, SearchableTableData)
+            };
         }
 
         public IActionResult OnPostAddPlatform()
@@ -23,33 +43,15 @@ namespace Headlight.Pages.Platforms
             return RedirectToPage("/Platforms/Add");
         }
 
+        public IActionResult OnPostQuery()
+        {
+            return RedirectToPage("/Platforms/Index", new { SearchInput });
+        }
+
         private void FillSearchableTableData()
         {
-            var nameCol = SearchableTableData.AddColumn("Name");
-            var countCol = SearchableTableData.AddColumn("Game Count");
-
-            foreach (Platform platform in AllPlatforms)
-            {
-                var row = SearchableTableData.AddRow();
-                row.HtmlAttributes = string.Format("id=\"{0}\"", platform.Id);
-                
-                var nameCell = row.AddCell(nameCol.Index, platform.Name);
-                string nameHref = Url.Page("/Platforms/View", new { PlatformId = platform.Id }) ?? "";
-                nameCell.Clickable = true;
-                nameCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", nameHref);
-                
-                var countCell = row.AddCell(countCol.Index, platform.Games?.Count.ToString() ?? "0");
-                string countHref = Url.Page("/Games/Index", new { PlatformIdFilter = platform.Id }) ?? "";
-                countCell.Clickable = true;
-                countCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", countHref);
-
-                var deleteCell = row.AddCell(-1, "");
-                string deleteHref = Url.Page("/Platforms/Delete", new { PlatformId = platform.Id }) ?? "";
-                deleteCell.Clickable = true;
-                deleteCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", deleteHref);
-                deleteCell.Icon = SvgIcon.Delete;
-                deleteCell.ShouldRender = platform.Id > 1;
-            }
+            Strategy = new PlatformSearchStrategy(context, Url, SearchInput, PaginationPage, SortField, SortDirection);
+            SearchableTableData = Strategy.GetTableData();
         }
     }
 }
