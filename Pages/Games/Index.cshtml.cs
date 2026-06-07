@@ -1,4 +1,3 @@
-using Headlight.AppCode.Globals;
 using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
@@ -49,24 +48,9 @@ namespace Headlight.Pages.Games
         [ViewData]
             public string PageTitle { get; set; } = "Games";
 
-        public string PageMessageCssClass { get; set; } = "";
-
-
         private int GamesPage = 1;
         public void OnGet()
         {
-            if (MessageResult != null)
-            {
-                switch ((PageMessageResult)MessageResult)
-                {
-                    case PageMessageResult.Success:
-                        Message ??= "Deleted successfully";
-                        PageMessageCssClass = "page-message-success";
-                        break;
-                    default:
-                        break;
-                }
-            }
             AssemblePlatformFilters();
             AssembleStatusFilters();
             FillSearchableTableData();

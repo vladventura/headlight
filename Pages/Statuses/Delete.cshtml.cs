@@ -1,3 +1,4 @@
+using Headlight.AppCode.Globals;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,8 @@ namespace Headlight.Pages.Statuses
                     SetGamesToDefault();
                     context.Statuses.Remove(SelectedStatus);
                     context.SaveChanges();
+                    TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
+                    TempData[TempDataVars.Message] = string.Format("{0} has been deleted successfully.", SelectedStatus.Name);
                 }
             }
             return RedirectToPage("/Statuses/Index");

@@ -1,8 +1,10 @@
+using Headlight.AppCode.Globals;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace Headlight.Pages.Platforms
 {
@@ -34,6 +36,8 @@ namespace Headlight.Pages.Platforms
                     SetGamesToDefault();
                     context.Platforms.Remove(SelectedPlatform);
                     context.SaveChanges();
+                    TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
+                    TempData[TempDataVars.Message] = string.Format("{0} has been deleted successfully.", SelectedPlatform.Name);
                 }
             }
             return RedirectToPage("/Platforms/Index");

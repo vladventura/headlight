@@ -1,20 +1,18 @@
+using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Headlight.Models.JSON;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 
 namespace Headlight.Pages.Settings
 {
-    public class ImportDataModel(AppDbContext context) : PageModel
+    public class ImportDataModel(AppDbContext context) : PageTempData
     {
         [BindProperty]
         public IFormFile? UploadedFile { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string PageMessage { get; set; } = "";
-        [BindProperty(SupportsGet = true)]
-        public string PageMessageCssClass { get; set; } = "";
+
         public void OnGet()
         {
         }
@@ -25,15 +23,36 @@ namespace Headlight.Pages.Settings
             {
                 using var reader = new StreamReader(UploadedFile.OpenReadStream());
                 string content = reader.ReadToEnd();
-                ImportJSON? jsonData = JsonSerializer.Deserialize<ImportJSON>(content);
-                if (jsonData != null)
+                
+                ImportJSON? jsonData;
+                try
                 {
-                    ProcessJsonData(jsonData);
-                    PageMessage = string.Format("File uploaded successfully! {0} games processed", jsonData.Games.Count);
-                    return Page();
+                    jsonData = JsonSerializer.Deserialize<ImportJSON>(content);
+                    if (jsonData != null)
+                    {
+                        ProcessJsonData(jsonData);
+                        TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
+                        TempData[TempDataVars.Message] = string.Format("File uploaded successfully! {0} games processed", jsonData.Games.Count);
+                    } 
+                    else
+                    {
+                        TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                        TempData[TempDataVars.Message] = string.Format("Could not process file!");
+                    }
+                } 
+                catch
+                {
+                    TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                    TempData[TempDataVars.Message] = string.Format("Invalid format!");
                 }
+
             }
-            return RedirectToPage("/Index");
+            else
+            {
+                TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                TempData[TempDataVars.Message] = string.Format("No file uploaded~!");
+            }
+            return RedirectToPage("/Settings/ImportData");
         }
 
         private void ProcessJsonData(ImportJSON jsonData)

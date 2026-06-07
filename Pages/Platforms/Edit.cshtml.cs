@@ -1,26 +1,16 @@
+using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace Headlight.Pages.Platforms
 {
-    public class EditModel(AppDbContext context) : PageModel
+    public class EditModel(AppDbContext context) : PageTempData
     {
-        private enum CssClass
-        {
-            Error,
-            Success
-        }
-
         [BindProperty(SupportsGet = true)]
         public int PlatformId { get; set; }
         public Platform? SelectedPlatform { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string PageMessage { get; set; } = "";
-        public string PageMessageCssClass { get; set; } = "";
-
 
         public void OnGet()
         {
@@ -38,8 +28,9 @@ namespace Headlight.Pages.Platforms
             }
             else
             {
-                SetPageMessage(string.Format("Could not find id: {0}", PlatformId), CssClass.Error);
-                return Page();
+                TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                TempData[TempDataVars.Message] = string.Format("Could not find id: {0}", PlatformId);
+                return RedirectToPage("/Platforms/Edit", new { PlatformId });
             }
         }
 
@@ -53,12 +44,6 @@ namespace Headlight.Pages.Platforms
             SelectedPlatform = context.Platforms
             .Where(g => g.Id == PlatformId)
             .FirstOrDefault();
-        }
-
-        private void SetPageMessage(string message, CssClass css)
-        {
-            PageMessage = message;
-            PageMessageCssClass = "page-message-" + css.ToString().ToLower();
         }
     }
 }

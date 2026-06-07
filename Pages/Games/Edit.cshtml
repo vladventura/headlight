@@ -9,9 +9,9 @@
     DateTime addedValue = new(Model.SelectedGame.AddedDateTime?.Ticks ?? DateTime.Now.Ticks, DateTimeKind.Unspecified);
 
     <form method="post">
-        @if (!string.IsNullOrEmpty(Model.PageMessage))
+        @if (Model.MessageResult != null)
         {
-            <small class="@Model.PageMessageCssClass">@Model.PageMessage</small>
+            <small class="@Model.PageMessageCssClass">@Model.Message</small>
         }
 
         <div class="container">
