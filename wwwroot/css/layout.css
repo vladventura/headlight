@@ -43,6 +43,7 @@ body {
 .main-footer {
     display: grid;
     grid-template-rows: 100%;
+    grid-auto-flow: column;
     grid-template-columns: 50% auto;
     padding: 0 1rem 0.5rem 1rem;
 }
