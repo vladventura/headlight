@@ -1,23 +1,13 @@
+using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Headlight.Pages.Platforms
 {
-    public class AddModel(AppDbContext context) : PageModel
+    public class AddModel(AppDbContext context) : PageTempData
     {
-        [BindProperty(SupportsGet = true)]
-        public string PageMessage { get; set; } = "";
-        [BindProperty(SupportsGet = true)]
-        public string PageMessageCssClass { get; set; } = "";
-
-        private enum CssClass
-        {
-            Error,
-            Success
-        }
-
         public void OnGet()
         {
         }
@@ -26,20 +16,16 @@ namespace Headlight.Pages.Platforms
         {
             context.Platforms.Add(platform);
             context.SaveChanges();
-            string pageMessage = string.Format("{0} has been added!", platform.Name);
-            SetPageMessage(pageMessage, CssClass.Success);
-            return Page();
+
+            TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
+            TempData[TempDataVars.Message] = string.Format("{0} has been added!", platform.Name);
+
+            return RedirectToPage("/Platforms/Add");
         }
 
         public IActionResult OnPostCancelChanges()
         {
             return RedirectToPage("/Platforms/Index");
-        }
-
-        private void SetPageMessage(string message, CssClass css)
-        {
-            PageMessage = message;
-            PageMessageCssClass = "page-message-" + css.ToString().ToLower();
         }
     }
 }

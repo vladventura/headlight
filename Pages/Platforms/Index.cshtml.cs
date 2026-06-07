@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Headlight.Pages.Platforms
 {
-    public class IndexModel(AppDbContext context) : PageModel, ISearchablePage
+    public class IndexModel(AppDbContext context) : PageTempData, ISearchablePage
     {
         [BindProperty(Name = "SearchInput", SupportsGet = true)]
             public string SearchInput { get; set; } = "";
