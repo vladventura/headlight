@@ -7,7 +7,5 @@ namespace Headlight.Models.API.Stats
     {
         [JsonPropertyName("statsTimeFrames")]
         public List<StatsTimeFrame>? StatsTimeFrames{ get; set; } = [];
-        [JsonPropertyName("randomGame")]
-        public GameJSON? RandomGame { get; set; }
     }
 }

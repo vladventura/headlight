@@ -1,5 +1,7 @@
 ﻿@inject IConfiguration _config
 
+@using Headlight.AppCode;
+
 @{
     bool hideNavBar = (bool)(ViewData["HideNavBar"] ?? false);
     string returnText = hideNavBar ? "Go Back" : "Index";
@@ -42,8 +44,11 @@
             </main>
         </div>
     </div>
-    <div class="main-footer">
+    <div id="mainFooter" class="main-footer">
         <span><a href="https://github.com/vladventura">@@vladventura</a></span>
-        <span>v@_config["AppVersion"]</span>
+        <span id="version">v@_config["AppVersion"]</span>
     </div>
 </div>
+
+
+<script src="~/js/updateCheck.js"></script>
