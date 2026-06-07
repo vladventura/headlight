@@ -6,9 +6,17 @@ const onSelectChange = () => {
     refreshFinishedBanner();
 }
 
-const setRandomGame = () => {
-    if (downloadedData["randomGame"]) {
-        const { name, platform, status, id } = downloadedData["randomGame"];
+const getRandomGameData = () => {
+    fetch('api/Stats/RandomGame', { cache: "default" })
+        .then(r => r.json())
+        .then(j => {
+            setRandomGame(j);
+        });
+}
+
+const setRandomGame = (randomGame) => {
+    if (randomGame) {
+        const { name, platform, status, id } = randomGame;
         document.getElementById("randomgame-name-link").innerText = name;
         document.getElementById("randomgame-name-link").href = '/Games/' + id;
         const description = `Enjoyed best on ${platform} - ${status}`;
@@ -88,11 +96,11 @@ const loadChart = () => {
 }
 
 const main = async () => {
+    getRandomGameData();
     await getChartData();
     cleanChartData();
     loadChart();
     refreshFinishedBanner();
-    setRandomGame();
 }
 
 main();
