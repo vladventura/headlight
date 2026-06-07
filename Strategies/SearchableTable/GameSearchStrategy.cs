@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Headlight.Strategies.SearchableTable
 {
-    public class GamesSearchStrategy(
+    public class GameSearchStrategy(
             IUrlHelper url, AppDbContext context, 
             string searchInput, string sortField,
             string sortDirection, int gamesPage,

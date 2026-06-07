@@ -138,7 +138,7 @@ namespace Headlight.Pages.Games
 
         private void FillSearchableTableData()
         {
-            Strategy = new GamesSearchStrategy(
+            Strategy = new GameSearchStrategy(
                 Url, context, SearchInput,
                 SortField, SortDirection, GamesPage,
                 PageTitle, StatusIdFilter, PlatformIdFilter

@@ -1,6 +1,5 @@
 using Headlight.CustomPages;
 using Headlight.Data;
-using Headlight.Models;
 using Headlight.Models.Components;
 using Headlight.Strategies.SearchableTable;
 using Microsoft.AspNetCore.Mvc;
