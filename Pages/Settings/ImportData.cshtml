@@ -12,9 +12,9 @@
 </div>
 
 <div class="container">
-    @if (!string.IsNullOrEmpty(Model.PageMessage))
+    @if (Model.MessageResult != null)
     {
-        <p>@Model.PageMessage</p>
+        <p class="@Model.PageMessageCssClass">@Model.Message</p>
     }
     <form method="post" enctype="multipart/form-data">
         <label for="UploadedFile">Uploaded File</label>

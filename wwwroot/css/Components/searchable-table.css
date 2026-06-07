@@ -6,3 +6,9 @@
 .table-delete-icon > svg {
     stroke: var(--pico-del-color);
 }
+
+.clickable-header {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}

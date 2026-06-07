@@ -11,12 +11,9 @@ namespace Headlight.Controllers
     [Route("api/Stats")]
     public class StatsController(AppDbContext context) : Controller
     {
-        [HttpGet]
-        public Stats Get()
+        [HttpGet("RandomGame")]
+        public GameJSON GetRandomGame()
         {
-            List<Status> statuses = [.. context.Statuses];
-
-            List<StatsTimeFrame> timeFrames = GetStatsTimeFrame(statuses);
             Game? pickedRandom = context.Games
                 .Include(g => g.Platform)
                 .Include(g => g.Status)
@@ -33,14 +30,22 @@ namespace Headlight.Controllers
                     Status = pickedRandom.Status?.Name ?? ""
                 };
             }
+            Response.Headers.CacheControl = "max-age=3600";
+            return randomGame ?? new();
+        }
+
+        [HttpGet]
+        public Stats Get()
+        {
+            List<StatsTimeFrame> timeFrames = GetStatsTimeFrame(context.Statuses);
             
-            return new() {
+            return new()
+            {
                 StatsTimeFrames = timeFrames,
-                RandomGame = randomGame
             };
         }
 
-        private List<StatsTimeFrame> GetStatsTimeFrame(List<Status> statuses)
+        private List<StatsTimeFrame> GetStatsTimeFrame(IQueryable<Status> statuses)
         {
             List<StatsTimeFrame> result = [];
 
@@ -70,15 +75,15 @@ namespace Headlight.Controllers
         {
             StatusAnalytic analytic = new();
 
-            List<Game> games = [.. context.Games.Where(g => g.StatusId == status.Id)];
+            IQueryable<Game> games = context.Games.Where(g => g.StatusId == status.Id);
 
             switch (key)
             {
                 case TimeFrameKeys.Month:
-                    games = [.. games.Where(StatsMonthCondition)];
+                    games = StatsMonthCondition(games);
                     break;
                 case TimeFrameKeys.Year:
-                    games = [.. games.Where(StatsYearCondition)];
+                    games = StatsYearCondition(games);
                     break;
                 default:
                     break;
@@ -110,24 +115,18 @@ namespace Headlight.Controllers
             return analytic;
         }
 
-        private bool StatsYearCondition(Game game)
+        private static IQueryable<Game> StatsYearCondition(IQueryable<Game> query)
         {
-            bool result = game.AddedDateTime != null;
-            if (result)
-            {
-                result &= game.AddedDateTime!.Value >= DateTime.Now.AddYears(-1);
-            }
-            return result;
+            return query
+                .Where(g => g.AddedDateTime != null)
+                .Where(g => g.AddedDateTime >= DateTime.Now.AddYears(-1).ToUniversalTime());
         }
 
-        private bool StatsMonthCondition(Game game)
+        private static IQueryable<Game> StatsMonthCondition(IQueryable<Game> query)
         {
-            bool result = game.AddedDateTime != null;
-            if (result)
-            {
-                result &= game.AddedDateTime!.Value >= DateTime.Now.AddMonths(-1);
-            }
-            return result;
+            return query
+                .Where(g => g.AddedDateTime != null)
+                .Where(g => g.AddedDateTime >= DateTime.Now.AddMonths(-1).ToUniversalTime());
         }
     }
 }

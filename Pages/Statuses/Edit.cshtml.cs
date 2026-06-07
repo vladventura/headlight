@@ -1,3 +1,4 @@
+using Headlight.AppCode.Globals;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,6 @@ namespace Headlight.Pages.Statuses
 {
     public class EditModel(AppDbContext context) : PageModel
     {
-        private enum CssClass
-        {
-            Error,
-            Success
-        }
-
         [BindProperty(SupportsGet = true)]
         public int StatusId { get; set; }
         public Status? SelectedStatus { get; set; }
@@ -38,8 +33,9 @@ namespace Headlight.Pages.Statuses
             }
             else
             {
-                SetPageMessage(string.Format("Could not find id: {0}", StatusId), CssClass.Error);
-                return Page();
+                TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                TempData[TempDataVars.Message] = string.Format("Could not find id: {0}", StatusId);
+                return RedirectToPage("/Statuses/Edit", new { StatusId });
             }
         }
 
@@ -53,12 +49,6 @@ namespace Headlight.Pages.Statuses
             SelectedStatus = context.Statuses
             .Where(s => s.Id == StatusId)
             .FirstOrDefault();
-        }
-
-        private void SetPageMessage(string message, CssClass css)
-        {
-            PageMessage = message;
-            PageMessageCssClass = "page-message-" + css.ToString().ToLower();
         }
     }
 }

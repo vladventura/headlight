@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="~/css/Games/add.css">
 
 <form method="post">
-    @if (!string.IsNullOrEmpty(Model.PageMessage))
+    @if (Model.MessageResult != null)
     {
-        <small class="@Model.PageMessageCssClass">@Model.PageMessage</small>
+        <small class="@Model.PageMessageCssClass">@Model.Message</small>
     }
 
     <div class="container">
