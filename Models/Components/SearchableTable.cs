@@ -12,12 +12,13 @@ namespace Headlight.Models.Components
         public string? HtmlAttributes { get; set; }
         public bool Paginate { get; set; } = false;
 
-        public SearchableTableColumn AddColumn(string name, string? htmlAttr = null)
+        public SearchableTableColumn AddColumn(string name, string? htmlAttr = null, string? id = null)
         {
             Columns.Add(new() 
             { 
                 Index = Columns.Count, 
-                Key = name, 
+                Title = name,
+                Id = id,
                 HtmlAttributes = htmlAttr 
             });
             return Columns.Last();
@@ -36,7 +37,8 @@ namespace Headlight.Models.Components
     public class SearchableTableColumn
     {
         public int Index { get; set; }
-        public string Key { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string? Id { get; set; } = "";
         public string? HtmlAttributes { get; set; }
         public bool IsSortField { get; set; } = false;
     }

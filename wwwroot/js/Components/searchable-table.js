@@ -124,7 +124,10 @@ const paginationSetup = () => {
 
 const sortSetup = () => {
     setIsSortable(true);
-    sentinelCopy = document.getElementById("sentinel").cloneNode();
+    let sentinelRef = document.getElementById("sentinel");
+    if (sentinelRef) {
+        sentinelCopy = sentinelRef.cloneNode();
+    }
     [... document.getElementsByClassName("clickable-header")]
         .forEach(div => {
             div.addEventListener("click", function () {
@@ -156,6 +159,11 @@ const sortSetup = () => {
                     arrowEl.innerHTML = arrowUpSvg;
                 }
                 clearData();
+                const searchableTable = document.getElementById("searchable-table");
+                const rowCount = Number(searchableTable.dataset.rowcount ?? 0);
+                if (rowCount < 50) {
+                    pullData();
+                }
                 paginationSetup();
             });
         });

@@ -26,27 +26,32 @@ namespace Headlight.Pages.Games
         public string PlatformName { get; set; } = "";
     }
 
-    public class IndexModel(AppDbContext context) : PageTempData
+    public class IndexModel(AppDbContext context) : PageTempData, ISearchablePage
     {
-        [FromQuery(Name = "SearchInput")]
-        public string SearchInput { get; set; } = "";
+        [BindProperty(Name = "SearchInput", SupportsGet = true)]
+            public string SearchInput { get; set; } = "";
+        public ISearchStrategy? Strategy { get; set; }
+        public SearchableTableData SearchableTableData { get; set; } = new();
+
+        [BindProperty]
+            public List<PlatformFilterOptions> PlatformFilters { get; set; } = [];
+        [BindProperty]
+            public List<StatusFilterOptions> StatusFilters { get; set; } = [];
         [FromQuery(Name = "PlatformIdFilter")]
-        public List<int> PlatformIdFilter { get; set; } = [];
+            public List<int> PlatformIdFilter { get; set; } = [];
         [FromQuery(Name = "StatusIdFilter")]
-        public List<int> StatusIdFilter { get; set; } = [];
+            public List<int> StatusIdFilter { get; set; } = [];
         [FromQuery(Name = "SortField")]
-        public string SortField { get; set; } = "";
+            public string SortField { get; set; } = "";
         [FromQuery(Name = "SortDirection")]
-        public string SortDirection { get; set; } = "";
+            public string SortDirection { get; set; } = "";
 
         [ViewData]
-        public string PageTitle { get; set; } = "Games";
+            public string PageTitle { get; set; } = "Games";
 
         public string PageMessageCssClass { get; set; } = "";
-        public SearchableTableData SearchableTableData { get; set; } = new();
-        public ISearchStrategy? Strategy { get; set; }
-        public List<PlatformFilterOptions> PlatformFilters { get; set; } = [];
-        public List<StatusFilterOptions> StatusFilters { get; set; } = [];
+
+
         private int GamesPage = 1;
         public void OnGet()
         {
@@ -72,23 +77,18 @@ namespace Headlight.Pages.Games
             return RedirectToPage("/Games/Add");
         }
 
-        public IActionResult OnPostQuery(string? searchInput, List<StatusFilterOptions>? statusOptions, List<PlatformFilterOptions>? platformOptions)
+        public IActionResult OnPostQuery()
         {
-            if (searchInput != null)
+            if (StatusFilters.Count > 0)
             {
-                SearchInput = searchInput;
-            }
-
-            if (statusOptions != null)
-            {
-                StatusIdFilter = [.. statusOptions
+                StatusIdFilter = [.. StatusFilters
                     .Where(so => so.StatusIsChecked == "true")
                     .Select(so => so.StatusId)
                 ];
             }
-            if (platformOptions != null)
+            if (PlatformFilters.Count > 0)
             {
-                PlatformIdFilter = [.. platformOptions
+                PlatformIdFilter = [.. PlatformFilters
                     .Where(po => po.PlatformIsChecked == "true")
                     .Select(po => po.PlatformId)
                 ];
@@ -130,7 +130,7 @@ namespace Headlight.Pages.Games
                 {
                     StatusName = status.Name,
                     StatusId = status.Id,
-                    StatusIsChecked = StatusIdFilter.Where(sid => sid == status.Id).Count() > 0 ? "true" : "false",
+                    StatusIsChecked = StatusIdFilter.Where(sid => sid == status.Id).Any()? "true" : "false",
                 };
                 StatusFilters.Add(option);
             }

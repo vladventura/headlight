@@ -6,7 +6,10 @@
 
 <div class="table-page-topbar">
     <div class="container">
-        <input type="search" name="searchInput" id="searchInput" placeholder="Find platform..." />
+        <form role="search">
+            <input type="search" name="SearchInput" id="SearchInput" placeholder="Find platform..." value="@Model.SearchInput" />
+            <input type="submit" value="Search" asp-page-handler="Query" />
+        </form>
     </div>
     <div class="table-page-add-container container">
         <form method="post">

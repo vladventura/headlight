@@ -20,10 +20,10 @@
                         var filterOption = Model.PlatformFilters[x];
                         <li>
                             <label>
-                                <input type="hidden" name="[@x].PlatformId" value="@filterOption.PlatformId" />
+                                <input type="hidden" name="PlatformFilters[@x].PlatformId" value="@filterOption.PlatformId" />
                                 <input type="checkbox"
-                                        id="[@x].PlatformIsChecked"
-                                        name="[@x].PlatformIsChecked"
+                                        id="PlatformFilters[@x].PlatformIsChecked"
+                                        name="PlatformFilters[@x].PlatformIsChecked"
                                         value="true"
                                         checked="@(filterOption.PlatformIsChecked == "true" ? true : false)" />
                                 @filterOption.PlatformName
@@ -44,10 +44,10 @@
                         var filterOption = Model.StatusFilters[x];
                         <li>
                             <label>
-                                <input type="hidden" name="[@x].StatusId" value="@filterOption.StatusId" />
+                                <input type="hidden" name="StatusFilters[@x].StatusId" value="@filterOption.StatusId" />
                                 <input type="checkbox"
-                                        id="[@x].StatusIsChecked"
-                                        name="[@x].StatusIsChecked"
+                                        id="StatusFilters[@x].StatusIsChecked"
+                                        name="StatusFilters[@x].StatusIsChecked"
                                         value="true"
                                         checked="@(filterOption.StatusIsChecked == "true" ? true : false)" />
                                 @filterOption.StatusName
@@ -64,7 +64,7 @@
 <div class="table-page-topbar">
     <div class="container">
         <fieldset role="search">
-            <input type="search" name="searchInput" id="searchInput" placeholder="Find game..." value="@Model.SearchInput"/>
+            <input type="search" name="SearchInput" id="SearchInput" placeholder="Find game..." value="@Model.SearchInput" />
             <input type="submit" value="Search" asp-page-handler="Query" />
         </fieldset>
     </div>

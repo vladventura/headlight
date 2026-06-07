@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Headlight.CustomPages
 {
-    public class PageTempData : PageModel, IPageTempData
+    public interface IPageTempData
     {
         [TempData]
-        public string? Message { get; set; } = "";
+        public string? Message { get; set; }
         [TempData]
         public int? MessageResult { get; set; }
     }

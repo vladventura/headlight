@@ -15,7 +15,7 @@ namespace Headlight.Strategies.SearchableTable
             List<int> statusIdFilter, List<int> platformIdFilter
     ) : ISearchStrategy
     {
-        private List<Game> AllGames { get; set; } = [];
+        private IQueryable<Game>? AllGames { get; set; }
 
         public SearchableTableData GetTableData()
         {
@@ -33,21 +33,24 @@ namespace Headlight.Strategies.SearchableTable
             var platformCol = tableData.AddColumn("Platform");
             platformCol.IsSortField = true;
 
-            foreach (Game game in AllGames)
+            if (AllGames != null)
             {
-                var row = tableData.AddRow();
-                row.HtmlAttributes = string.Format("id=\"{0}\"", game.Id);
-                var nameCell = row.AddCell(nameCol.Index, game.Name);
-                nameCell.Clickable = true;
-                string nameHref = url.Page("/Games/View", new { GameId = game.Id }) ?? "";
-                nameCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", nameHref);
-                row.AddCell(statusCol.Index, game.Status.Name);
-                row.AddCell(platformCol.Index, game.Platform.Name);
-                var deleteCell = row.AddCell(-1, "");
-                string deleteHref = url.Page("/Games/Delete", new { GameId = game.Id }) ?? "";
-                deleteCell.Clickable = true;
-                deleteCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", deleteHref);
-                deleteCell.Icon = SvgIcon.Delete;
+                foreach (Game game in AllGames)
+                {
+                    var row = tableData.AddRow();
+                    row.HtmlAttributes = string.Format("id=\"{0}\"", game.Id);
+                    var nameCell = row.AddCell(nameCol.Index, game.Name);
+                    nameCell.Clickable = true;
+                    string nameHref = url.Page("/Games/View", new { GameId = game.Id }) ?? "";
+                    nameCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", nameHref);
+                    row.AddCell(statusCol.Index, game.Status.Name);
+                    row.AddCell(platformCol.Index, game.Platform.Name);
+                    var deleteCell = row.AddCell(-1, "");
+                    string deleteHref = url.Page("/Games/Delete", new { GameId = game.Id }) ?? "";
+                    deleteCell.Clickable = true;
+                    deleteCell.ClickableHtmlAttributes = string.Format("onclick=\"location.href = '{0}'\"", deleteHref);
+                    deleteCell.Icon = SvgIcon.Delete;
+                }
             }
 
             return tableData;
@@ -70,7 +73,6 @@ namespace Headlight.Strategies.SearchableTable
                 "Platform" => PlatformSortField(query),
                 _ => query?.OrderBy(g => g.Name),
             };
-
 
             IQueryable<Platform>? proposedFilteredPlatform = context.Platforms.Where(p => platformIdFilter.Contains(p.Id));
             if (!proposedFilteredPlatform.Any())
@@ -109,7 +111,7 @@ namespace Headlight.Strategies.SearchableTable
                 );
             }
 
-            AllGames = query != null ? [.. query!.Skip((gamesPage - 1) * 50).Take(50)] : [];
+            AllGames = query?.Skip((gamesPage - 1) * 50).Take(50);
         }
 
         private IQueryable<Game>? NameSortField(IQueryable<Game>? query)

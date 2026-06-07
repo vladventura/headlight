@@ -20,14 +20,15 @@
                 string columnHtmlAttrs = column.HtmlAttributes ?? "";
                 if (column.IsSortField)
                 {
-                    <th 
+                   string columnId = column.Id != null ? column.Id : column.Title;
+                        <th 
                         @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1 ? "2" : false)"
                     >
-                        <div class="clickable-header" id="@string.Format("{0}-header", column.Key)">
+                        <div class="clickable-header" id="@string.Format("{0}-header", columnId)">
                             <div class="container">
-                                @column.Key
+                                @column.Title
                             </div>
-                            <div id="@string.Format("{0}-header-arrow", column.Key)" class="container">
+                            <div id="@string.Format("{0}-header-arrow", columnId)" class="container">
                             </div>
                         </div>
                     </th>
@@ -35,7 +36,7 @@
                 else
                 {
                     <th @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1 ? "2" : false)">
-                        @column.Key
+                        @column.Title
                     </th>
                 }
 
