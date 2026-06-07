@@ -1,3 +1,5 @@
+using Headlight.AppCode.Globals;
+using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -6,20 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Headlight.Pages.Games
 {
-    public class EditModel(AppDbContext context) : PageModel
+    public class EditModel(AppDbContext context) : PageTempData
     {
-        private enum CssClass
-        {
-            Error,
-            Success
-        }
-
         [BindProperty(SupportsGet = true)]
         public int GameId { get; set; }
         public Game? SelectedGame { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string PageMessage { get; set; } = "";
-        public string PageMessageCssClass { get; set; } = "";
 
         public List<Status> Statuses { get; set; } = [];
         public List<Platform> Platforms { get; set; } = [];
@@ -53,8 +46,9 @@ namespace Headlight.Pages.Games
             }
             else
             {
-                SetPageMessage(string.Format("Could not find id: {0}", GameId), CssClass.Error);
-                return Page();
+                TempData[TempDataVars.MessageResult] = PageMessageResult.Error;
+                TempData[TempDataVars.Message] = string.Format("Could not find id: {0}", GameId);
+                return RedirectToPage("/Games/Edit", new { GameId });
             }
         }
 
@@ -70,12 +64,6 @@ namespace Headlight.Pages.Games
             .Include(o => o.Status)
             .Include(o => o.Platform)
             .FirstOrDefault();
-        }
-
-        private void SetPageMessage(string message, CssClass css)
-        {
-            PageMessage = message;
-            PageMessageCssClass = "page-message-" + css.ToString().ToLower();
         }
     }
 }
