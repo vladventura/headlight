@@ -1,0 +1,20 @@
+﻿@page
+@model Headlight.Pages.Settings.ExportDataModel
+@{
+    ViewData["Title"] = ViewData["PageTitle"] = "Export";
+}
+
+<div class="container">
+    <hgroup>
+        <h1>Download Data</h1>
+        <p>Downloads all your data from the database.</p>
+    </hgroup>
+</div>
+
+<div class="container">
+    @if (Model.MessageResult != null)
+    {
+        <p class="@Model.PageMessageCssClass">@Model.Message</p>
+    }
+    <a asp-page-handler="DownloadData" role="button">Download</a>
+</div>
