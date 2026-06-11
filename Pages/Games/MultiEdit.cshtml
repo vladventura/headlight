@@ -1,0 +1,54 @@
+﻿@page
+@model Headlight.Pages.Games.MultiEditModel
+@{
+    ViewData["Title"] = "Games";
+    ViewData["PageTitle"] = "Multi Edit";
+}
+
+@if (Model.SelectedGames.Count > 0)
+{
+    DateTime addedValue = new(DateTime.Now.Ticks, DateTimeKind.Unspecified);
+
+    <form method="post">
+        @if (Model.MessageResult != null)
+        {
+            <small class="@Model.PageMessageCssClass">@Model.Message</small>
+        }
+        <div class="container">
+            <label for="AddedDateTime">Added Date</label>
+            <input type="date" name="AddedDateTime" id="AddedDateTime" value="@addedValue.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="container">
+            <label for="StatusId">Status</label>
+            <select name="StatusId" aria-label="Status Id" required>
+                @foreach (var status in Model.Statuses)
+                {
+                    string? selected = 1 == status.Id ? "selected" : null;
+                    <option value="@status.Id" selected="@selected">@status.Name</option>
+                }
+            </select>
+        </div>
+        <div class="container">
+            <label for="PlatformId">Platform</label>
+            <select name="PlatformId" aria-label="Platform Id" required>
+                @foreach (var platform in Model.Platforms)
+                {
+                    string? selected = 1 == platform.Id ? "selected" : null;
+                    <option value="@platform.Id" selected="@selected">@platform.Name</option>
+                }
+            </select>
+        </div>
+        <button asp-page-handler="SaveChanges" asp-route-selectedgames="@Model.SelectedGames">Save</button>
+        <button asp-page-handler="CancelChanges">Cancel</button>
+    </form>
+}
+else
+{
+    <div class="container">
+        <span>No games passed in!</span>
+    </div>
+
+    <div>
+        <a asp-page="/Games/Index">Go back</a>
+    </div>
+}
