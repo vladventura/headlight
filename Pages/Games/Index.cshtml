@@ -68,11 +68,6 @@
             <input type="submit" value="Search" asp-page-handler="Query" />
         </fieldset>
     </div>
-    <div class="table-page-add-container container">
-        <form method="post">
-            <button type="submit" asp-page-handler="AddGame">Add Game</button>
-        </form>
-    </div>
 </div>
 
 @if (Model.MessageResult != null)
@@ -84,4 +79,18 @@
 
 <div class="table-page-list">
     <partial name="_SearchableTablePartial" model="@Model.SearchableTableData" />
+</div>
+
+<div class="under-list-container">
+    <div class="table-page-add-container container">
+        <form method="post">
+            <button type="submit" asp-page-handler="AddGame">Add Game</button>
+        </form>
+    </div>
+    @if (Model.MultiSelect == true)
+    {
+        <div class="table-page-add-container container">
+            <button type="submit" asp-page-handler="MultiSelect">Multi Edit</button>
+        </div>
+    }
 </div>

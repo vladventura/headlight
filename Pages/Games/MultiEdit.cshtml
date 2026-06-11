@@ -1,24 +1,19 @@
-﻿@page "/Games/{gameId:int}/Edit"
-@model Headlight.Pages.Games.EditModel
+﻿@page
+@model Headlight.Pages.Games.MultiEditModel
 @{
     ViewData["Title"] = "Edit";
-    ViewData["PageTitle"] = "Edit";
+    ViewData["PageTitle"] = "Multi Edit";
 }
 
-@if (Model.SelectedGame != null)
+@if (Model.SelectedGames.Count > 0)
 {
-    DateTime addedValue = new(Model.SelectedGame.AddedDateTime?.Ticks ?? DateTime.Now.Ticks, DateTimeKind.Unspecified);
+    DateTime addedValue = new(DateTime.Now.Ticks, DateTimeKind.Unspecified);
 
     <form method="post">
         @if (Model.MessageResult != null)
         {
             <small class="@Model.PageMessageCssClass">@Model.Message</small>
         }
-
-        <div class="container">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" value="@Model.SelectedGame.Name"/>
-        </div>
         <div class="container">
             <label for="AddedDateTime">Added Date</label>
             <input type="date" name="AddedDateTime" id="AddedDateTime" value="@addedValue.ToString("yyyy-MM-dd")" />
@@ -28,8 +23,8 @@
             <select name="StatusId" aria-label="Status Id" required>
                 @foreach (var status in Model.Statuses)
                 {
-                        string? selected = Model.SelectedGame.StatusId == status.Id ? "selected" : null;
-                        <option value="@status.Id" selected="@selected">@status.Name</option>
+                    string? selected = 1 == status.Id ? "selected" : null;
+                    <option value="@status.Id" selected="@selected">@status.Name</option>
                 }
             </select>
         </div>
@@ -38,19 +33,19 @@
             <select name="PlatformId" aria-label="Platform Id" required>
                 @foreach (var platform in Model.Platforms)
                 {
-                    string? selected = Model.SelectedGame.PlatformId == platform.Id ? "selected" : null;
+                    string? selected = 1 == platform.Id ? "selected" : null;
                     <option value="@platform.Id" selected="@selected">@platform.Name</option>
                 }
             </select>
         </div>
-        <button asp-page-handler="SaveChanges">Save</button>
+        <button asp-page-handler="SaveChanges" asp-route-selectedgames="@Model.SelectedGames">Save</button>
         <button asp-page-handler="CancelChanges">Cancel</button>
     </form>
 }
 else
 {
     <div class="container">
-        <span>No game found with id @Model.GameId</span>
+        <span>No games passed in!</span>
     </div>
 
     <div>
