@@ -2,6 +2,7 @@
 @model Headlight.Pages.Games.EditModel
 @{
     ViewData["Title"] = "Edit";
+    ViewData["PageTitle"] = "Edit";
 }
 
 @if (Model.SelectedGame != null)
@@ -20,7 +21,7 @@
         </div>
         <div class="container">
             <label for="AddedDateTime">Added Date</label>
-            <input type="date" name="AddedDateTime" id="AddedDateTime" value="@addedValue.ToLocalTime().ToString("yyyy-MM-dd")" />
+            <input type="date" name="AddedDateTime" id="AddedDateTime" value="@addedValue.ToString("yyyy-MM-dd")" />
         </div>
         <div class="container">
             <label for="StatusId">Status</label>
