@@ -17,7 +17,7 @@ namespace Headlight.Pages.Settings
         {
         }
 
-        public IActionResult OnPostHandleUploadData()
+        public async Task<IActionResult> OnPostHandleUploadData()
         {
             if (UploadedFile != null)
             {
@@ -30,7 +30,7 @@ namespace Headlight.Pages.Settings
                     jsonData = JsonSerializer.Deserialize<ImportJSON>(content);
                     if (jsonData != null)
                     {
-                        ProcessJsonData(jsonData);
+                        await ProcessJsonData(jsonData);
                         TempData[TempDataVars.MessageResult] = PageMessageResult.Success;
                         TempData[TempDataVars.Message] = string.Format("File uploaded successfully! {0} games processed", jsonData.Games.Count);
                     } 
@@ -55,16 +55,18 @@ namespace Headlight.Pages.Settings
             return RedirectToPage("/Settings/ImportData");
         }
 
-        private void ProcessJsonData(ImportJSON jsonData)
+        private async Task ProcessJsonData(ImportJSON jsonData)
         {
             HandlePlatforms(jsonData.Platforms);
+            await context.SaveChangesAsync();
             HandleGames(jsonData.Games);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         private void HandlePlatforms(List<string> platforms)
         {
             List<string> existingPlatforms = [.. context.Platforms.Select(p => p.Name)];
+            List<Platform> newPlatforms = [];
             foreach(string platform in platforms)
             {
                 if (existingPlatforms.Contains(platform))
@@ -75,20 +77,24 @@ namespace Headlight.Pages.Settings
                 {
                     Name = platform,
                 };
-                context.Platforms.Add(newPlatform);
+                newPlatforms.Add(newPlatform);
             }
+            context.Platforms.AddRange(newPlatforms);
         }
 
-        private void HandleGames(List<GameJSON> games)
+        private async void HandleGames(List<GameJSON> games)
         {
+            List<Game> newGames = [];
+            List<Platform> platforms = [.. context.Platforms];
+            List<Status> statuses = [.. context.Statuses];
             foreach (GameJSON incomingGame in games)
             {
-                int platformId = context.Platforms
+                int platformId = platforms
                     .Where(p => p.Name == incomingGame.Platform)
                     .Select(p => p.Id)
                     .FirstOrDefault();
                 platformId = (platformId <= 0) ? 1 : platformId;
-                int statusId = context.Statuses
+                int statusId = statuses
                     .Where(p => p.Name == incomingGame.Status)
                     .Select(p => p.Id)
                     .FirstOrDefault();
@@ -111,8 +117,9 @@ namespace Headlight.Pages.Settings
                     FinishedDateTime = finishedDateTime,
                     AddedDateTime = addedDateTime
                 };
-                context.Games.Add(newGame);
+                newGames.Add(newGame);
             }
+            await context.Games.AddRangeAsync(newGames);
         }
     }
 }
