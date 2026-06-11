@@ -44,6 +44,8 @@ namespace Headlight.Pages.Games
             public string SortField { get; set; } = "";
         [FromQuery(Name = "SortDirection")]
             public string SortDirection { get; set; } = "";
+        [FromQuery(Name = "MultiSelect")]
+            public bool? MultiSelect { get; set; } = false;
 
         [ViewData]
             public string PageTitle { get; set; } = "Games";
@@ -78,6 +80,11 @@ namespace Headlight.Pages.Games
                 ];
             }
             return RedirectToPage("/Games/Index", new { PlatformIdFilter, StatusIdFilter, SearchInput });
+        }
+
+        public IActionResult OnPostMultiSelect(List<string> multiSelect)
+        {
+            return RedirectToPage("/Games/MultiEdit", new { SelectedGames = multiSelect });
         }
 
         public PartialViewResult OnGetRows(int incomingPage)
@@ -125,7 +132,8 @@ namespace Headlight.Pages.Games
             Strategy = new GameSearchStrategy(
                 Url, context, SearchInput,
                 SortField, SortDirection, GamesPage,
-                PageTitle, StatusIdFilter, PlatformIdFilter
+                PageTitle, StatusIdFilter, PlatformIdFilter,
+                MultiSelect
             );
             SearchableTableData = Strategy.GetTableData();
             PageTitle = SearchableTableData.PageTitle ?? PageTitle;

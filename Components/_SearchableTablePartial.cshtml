@@ -15,12 +15,18 @@
         
     <thead>
         <tr>
+            @if (Model.CheckableRows != null)
+            {
+                <th>
+                   <input type="checkbox" id="MultiSelect" name="MultiSelect" value="@Model.CheckableRows" checked="@(Model.CheckableRows == true ? true : null)" />
+                </th>
+            }
             @foreach((SearchableTableColumn column, int index) in Model.Columns.OrderBy(c => c.Index).Select((c, i) => (c, i)))
             {
                 string columnHtmlAttrs = column.HtmlAttributes ?? "";
                 if (column.IsSortField)
                 {
-                   string columnId = column.Id != null ? column.Id : column.Title;
+                    string columnId = column.Id != null ? column.Id : column.Title;
                         <th 
                         @Html.Raw(columnHtmlAttrs) colspan="@(index == Model.Columns.Count - 1 ? "2" : false)"
                     >
@@ -39,8 +45,6 @@
                         @column.Title
                     </th>
                 }
-
-                
             }
         </tr>
     </thead>

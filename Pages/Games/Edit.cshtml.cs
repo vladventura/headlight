@@ -3,7 +3,6 @@ using Headlight.CustomPages;
 using Headlight.Data;
 using Headlight.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Headlight.Pages.Games

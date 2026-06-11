@@ -61,17 +61,24 @@ body {
 }
 
 .table-page-topbar {
-    display: grid;
-    grid-template-rows: 100%;
-    grid-template-columns: 80% auto;
-    grid-column-gap: 1rem;
+    display: flex;
 }
 
 .table-page-add-container {
     text-align: center;
+    width: 60%;
+    height: 60%;
 }
 
 .table-page-list {
-    height: 60vh;
+    height: 57vh;
     overflow-y: auto;
+}
+
+.under-list-container {
+    margin-top: 1rem;
+    gap: 2rem;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
 }
