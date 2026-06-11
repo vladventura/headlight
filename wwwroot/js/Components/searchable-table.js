@@ -169,12 +169,24 @@ const sortSetup = () => {
         });
 };
 
+const multiSelectSetup = () => {
+    const multiSelectEl = document.getElementById("MultiSelect");
+    multiSelectEl.addEventListener("change", (e) => {
+        const params = new URLSearchParams(location.search);
+        params.set("MultiSelect", e.target.checked);
+        location.href = `${location.origin}${location.pathname}?${params}`;
+    });
+};
+
 const main = () => {
     if (document.getElementById("sentinel")) {
         paginationSetup();
     }
     if (document.getElementsByClassName("clickable-header").length > 0) {
         sortSetup();
+    }
+    if (document.getElementById("MultiSelect")) {
+        multiSelectSetup();
     }
 };
 

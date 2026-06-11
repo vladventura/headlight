@@ -10,10 +10,17 @@
     int dataRowCount = Model.Rows.Count;
 }
 
-@foreach (SearchableTableRow row in Model.Rows)
+@for(int x = 0; x < Model.Rows.Count; x++)
 {
+    SearchableTableRow row = Model.Rows[x];
     string rowHtmlAttrs = row.HtmlAttributes ?? "";
     <tr @Html.Raw(rowHtmlAttrs)>
+        @if (Model.CheckableRows != null)
+        {
+            <td>
+                <input type="checkbox" name="MultiSelect" value="@row.CheckableValue" />
+            </td>
+        }
         @foreach (SearchableTableRowCell cell in row.Cells)
         {
             string cellHtmlAttrs = cell.HtmlAttributes ?? "";

@@ -12,7 +12,8 @@ namespace Headlight.Strategies.SearchableTable
             string searchInput, string sortField,
             string sortDirection, int gamesPage,
             string pageTitle,
-            List<int> statusIdFilter, List<int> platformIdFilter
+            List<int> statusIdFilter, List<int> platformIdFilter,
+            bool? multiSelect
     ) : ISearchStrategy
     {
         private IQueryable<Game>? AllGames { get; set; }
@@ -23,7 +24,8 @@ namespace Headlight.Strategies.SearchableTable
 
             SearchableTableData tableData = new() { 
                 Paginate = true,
-                PageTitle = pageTitle
+                PageTitle = pageTitle,
+                CheckableRows = multiSelect
             };
 
             var nameCol = tableData.AddColumn("Name");
@@ -38,6 +40,7 @@ namespace Headlight.Strategies.SearchableTable
                 foreach (Game game in AllGames)
                 {
                     var row = tableData.AddRow();
+                    row.CheckableValue = multiSelect == true ? game.Id.ToString() : null;
                     row.HtmlAttributes = string.Format("id=\"{0}\"", game.Id);
                     var nameCell = row.AddCell(nameCol.Index, game.Name);
                     nameCell.Clickable = true;
