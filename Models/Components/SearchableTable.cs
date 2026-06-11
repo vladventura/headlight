@@ -11,6 +11,7 @@ namespace Headlight.Models.Components
         public List<SearchableTableRow> Rows { get; set; } = [];
         public string? HtmlAttributes { get; set; }
         public bool Paginate { get; set; } = false;
+        public bool? CheckableRows { get; set; } = null;
 
         public SearchableTableColumn AddColumn(string name, string? htmlAttr = null, string? id = null)
         {
@@ -46,6 +47,7 @@ namespace Headlight.Models.Components
     public class SearchableTableRow
     {
         public List<SearchableTableRowCell> Cells { get; set; } = [];
+        public string? CheckableValue { get; set; }
         public string? HtmlAttributes { get; set; }
 
         public SearchableTableRowCell AddCell(int index, string value)
